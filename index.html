@@ -1,0 +1,1830 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>AI Engineer Handbook</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@600;800&display=swap" rel="stylesheet">
+<style>
+/* Layout: sticky chapter rail on the left, one reading column on the right.
+   Each chapter owns one hue from the four-colour palette (blue, red, yellow, green). */
+:root{
+  --bg:#F6F8FC; --surface:#FFFFFF; --fg:#1B2233; --muted:#566074; --line:#DDE3EE;
+  --blue:#4285F4; --red:#EA4335; --yellow:#FBBC05; --green:#34A853;
+  --blue-soft:#E8F0FE; --red-soft:#FCE8E6; --yellow-soft:#FEF4D3; --green-soft:#E3F4E8;
+  --blue-ink:#174EA6; --red-ink:#A50E0E; --yellow-ink:#6B4A00; --green-ink:#0D652D;
+  --blue-on:#FFFFFF; --red-on:#FFFFFF; --yellow-on:#2E2100; --green-on:#FFFFFF;
+  --code-bg:#12182B; --code-fg:#E6EAF5; --code-line:#26304D; --code-muted:#8590AD;
+  --tok-kw:#FF8FA3; --tok-str:#8FDBA6; --tok-num:#FFD166; --tok-com:#7A86A6; --tok-dec:#8AB4FF; --tok-bi:#9AD0FF;
+  --font-display:"Outfit","Trebuchet MS",system-ui,sans-serif;
+  --font-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0F1424; --surface:#171E33; --fg:#E7EBF5; --muted:#A3AEC6; --line:#2A3452;
+  --blue-soft:#1C2A4A; --red-soft:#3A2226; --yellow-soft:#3A3117; --green-soft:#1B3326;
+  --blue-ink:#AECBFA; --red-ink:#F6AEA9; --yellow-ink:#FDE293; --green-ink:#A8DAB5;
+  --code-bg:#0A0F1D; --code-line:#222C48;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1424; --surface:#171E33; --fg:#E7EBF5; --muted:#A3AEC6; --line:#2A3452;
+  --blue-soft:#1C2A4A; --red-soft:#3A2226; --yellow-soft:#3A3117; --green-soft:#1B3326;
+  --blue-ink:#AECBFA; --red-ink:#F6AEA9; --yellow-ink:#FDE293; --green-ink:#A8DAB5;
+  --code-bg:#0A0F1D; --code-line:#222C48;
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.65;
+  padding-block:0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+h1,h2,h3,h4{font-family:var(--font-display);line-height:1.15;text-wrap:balance;margin:0}
+p{margin:0 0 14px;max-width:68ch}
+a{color:var(--blue-ink)}
+code{font-family:var(--font-mono);font-size:.88em}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px;border-radius:6px}
+
+.wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:230px minmax(0,1fr);gap:44px;padding-block:28px 80px}
+main{min-width:0}
+
+/* chapter rail */
+.toc{position:sticky;top:24px;align-self:start;max-height:calc(100vh - 48px);overflow:auto;display:flex;flex-direction:column;gap:2px;padding-right:4px}
+.toc .brand{font-family:var(--font-display);font-weight:800;font-size:19px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.toc a{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--muted);font-weight:500;font-size:14.5px;padding:7px 10px;border-radius:10px;white-space:nowrap}
+.toc a i{width:10px;height:10px;border-radius:50%;flex:none;background:var(--c)}
+.toc a:hover{background:var(--surface);color:var(--fg)}
+.toc a.on{background:var(--surface);color:var(--fg);font-weight:700;box-shadow:0 0 0 1px var(--line)}
+.c-blue{--c:var(--blue);--soft:var(--blue-soft);--ink:var(--blue-ink);--on:var(--blue-on)}
+.c-red{--c:var(--red);--soft:var(--red-soft);--ink:var(--red-ink);--on:var(--red-on)}
+.c-yellow{--c:var(--yellow);--soft:var(--yellow-soft);--ink:var(--yellow-ink);--on:var(--yellow-on)}
+.c-green{--c:var(--green);--soft:var(--green-soft);--ink:var(--green-ink);--on:var(--green-on)}
+
+/* cover */
+.cover{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:32px;align-items:center;padding:8px 0 40px}
+.cover .kicker{font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:12.5px;color:var(--blue-ink);margin-bottom:12px}
+.cover h1{font-size:clamp(38px,6vw,64px);font-weight:800;letter-spacing:-.02em}
+.cover h1 span{color:var(--blue-ink)}
+.cover .sub{font-size:19px;color:var(--muted);margin:16px 0 20px;max-width:46ch}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:13px;font-weight:600;padding:5px 12px;border-radius:999px;background:var(--soft);color:var(--ink)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tiles div{aspect-ratio:1;border-radius:26px;display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:28px;max-width:100%}
+.tiles .t1{background:var(--blue);color:var(--blue-on);border-bottom-right-radius:6px}
+.tiles .t2{background:var(--red);color:var(--red-on);border-radius:50%}
+.tiles .t3{background:var(--yellow);color:var(--yellow-on);border-top-left-radius:6px}
+.tiles .t4{background:var(--green);color:var(--green-on);border-top-right-radius:60px}
+
+/* chapters */
+.chapter{margin-top:56px}
+.chapter-head{background:var(--soft);border-radius:24px;padding:28px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:22px;align-items:start}
+.num{width:64px;height:64px;border-radius:20px;background:var(--c);color:var(--on);display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:30px}
+.chapter-head h2{font-size:clamp(28px,4vw,40px);color:var(--ink);font-weight:800;letter-spacing:-.01em}
+.chapter-head .lead{margin:10px 0 0;color:var(--fg);font-size:17px}
+.learn{margin:16px 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:8px}
+.learn li{background:var(--surface);color:var(--ink);font-size:13.5px;font-weight:600;padding:5px 12px;border-radius:999px}
+.chapter h3{font-size:25px;margin:40px 0 12px;color:var(--ink)}
+.chapter h4{font-size:18px;margin:26px 0 8px}
+.chapter ul.plain,.chapter ol.plain{padding-left:22px;margin:0 0 16px;max-width:68ch}
+.chapter ul.plain li,.chapter ol.plain li{margin-bottom:6px}
+
+/* callouts */
+.callout{border-radius:16px;padding:16px 18px;margin:20px 0;background:var(--k);max-width:760px}
+.callout .tag{display:inline-block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:800;color:var(--ki);margin-bottom:6px}
+.callout p:last-child{margin-bottom:0}
+.callout.tip{--k:var(--green-soft);--ki:var(--green-ink)}
+.callout.warn{--k:var(--red-soft);--ki:var(--red-ink)}
+.callout.mentor{--k:var(--yellow-soft);--ki:var(--yellow-ink)}
+.callout.def{--k:var(--blue-soft);--ki:var(--blue-ink)}
+
+/* code */
+figure.code{margin:18px 0 8px;border-radius:16px;overflow:hidden;background:var(--code-bg);color:var(--code-fg);min-width:0;max-width:100%}
+figure.code figcaption{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 14px;border-bottom:1px solid var(--code-line);font-family:var(--font-mono);font-size:12.5px;color:var(--code-muted)}
+figure.code figcaption .dots{display:flex;gap:6px;margin-right:6px}
+figure.code figcaption .dots i{width:10px;height:10px;border-radius:50%;display:block}
+figure.code figcaption .dots i:nth-child(1){background:var(--red)}
+figure.code figcaption .dots i:nth-child(2){background:var(--yellow)}
+figure.code figcaption .dots i:nth-child(3){background:var(--green)}
+figure.code figcaption .name{display:flex;align-items:center;min-width:0}
+.copy{font:600 12px var(--font-body);color:var(--code-fg);background:transparent;border:1px solid var(--code-line);border-radius:8px;padding:4px 10px;cursor:pointer}
+.copy:hover{background:var(--code-line)}
+figure.code pre{margin:0;padding:16px 18px;overflow-x:auto;font-family:var(--font-mono);font-size:13.5px;line-height:1.65;tab-size:4}
+figure.code pre code{font-size:inherit}
+.k{color:var(--tok-kw)}.s{color:var(--tok-str)}.n{color:var(--tok-num)}.cm{color:var(--tok-com);font-style:italic}.d{color:var(--tok-dec)}.b{color:var(--tok-bi)}
+.explain{margin:0 0 22px;padding:0;list-style:none;counter-reset:ex;max-width:760px;display:grid;gap:8px}
+.explain li{counter-increment:ex;display:grid;grid-template-columns:28px minmax(0,1fr);gap:10px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px 10px 10px}
+.explain li::before{content:counter(ex);width:26px;height:26px;border-radius:50%;background:var(--c);color:var(--on);display:grid;place-items:center;font-weight:800;font-size:13px}
+.explain code{background:var(--soft);color:var(--ink);padding:1px 6px;border-radius:6px;word-break:break-word}
+.explain-title{font-family:var(--font-display);font-weight:600;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);margin:6px 0 8px}
+p code,li code,td code{background:var(--soft);color:var(--ink);padding:1px 6px;border-radius:6px;word-break:break-word}
+
+
+/* prose walkthroughs under code */
+.walk{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 20px 4px;margin:0 0 26px;max-width:780px}
+.walk-label{display:block;font-family:var(--font-display);font-weight:600;font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);margin-bottom:8px}
+.walk p{font-size:16.5px;line-height:1.75;max-width:none}
+.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:18px 0}
+.flow span{background:var(--soft);color:var(--ink);padding:8px 14px;border-radius:12px;font-weight:700;font-size:14px}
+.flow i{color:var(--muted);font-style:normal;font-weight:700}
+.chapter > p{font-size:17px;line-height:1.75}
+
+
+/* roadmap phases */
+.phase{margin-top:36px}
+.phase h3{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:0}
+.phase .time{font:700 12px var(--font-body);letter-spacing:.06em;text-transform:uppercase;background:var(--soft);color:var(--ink);padding:3px 10px;border-radius:999px}
+.phase .goal{font-size:17px}
+.phase h4 .prog{font-size:13px;color:var(--muted);font-weight:600;margin-left:8px}
+.terms table{min-width:480px}
+.terms td:first-child{font-weight:700;width:32%;color:var(--ink)}
+.todo{display:grid;gap:8px;margin:8px 0 14px;max-width:780px}
+.chk{display:flex;gap:12px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px;cursor:pointer}
+.chk input{margin-top:4px;width:18px;height:18px;accent-color:var(--c);flex:none}
+.chk input:checked + span{color:var(--muted);text-decoration:line-through}
+.proof{background:var(--soft);color:var(--ink);border-radius:12px;padding:10px 14px;max-width:780px}
+p.prog{font-size:14px;color:var(--muted);font-weight:600}
+
+/* roadmap cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin:18px 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px;min-width:0}
+.card .badge{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:999px;background:var(--soft);color:var(--ink);margin-bottom:10px}
+.card h4{margin:0 0 6px;font-size:19px}
+.card p{font-size:14.5px;color:var(--muted);margin:0}
+
+/* API key steps */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin:20px 0}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:18px;overflow:hidden;min-width:0}
+.mock{background:var(--soft);padding:16px;min-height:132px;display:flex;flex-direction:column;gap:8px;justify-content:center;font-size:12.5px}
+.step .body{padding:14px 16px 16px}
+.step .body b.n1{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--c);color:var(--on);font-size:13px;margin-right:8px}
+.step .body h4{font-size:16.5px;margin:0 0 6px;display:flex;align-items:center}
+.step .body p{font-size:14px;color:var(--muted);margin:0}
+.bar{background:var(--surface);border-radius:999px;padding:6px 12px;font-family:var(--font-mono);font-size:12px;color:var(--muted);border:1px solid var(--line);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.btn{display:inline-block;align-self:flex-start;background:var(--c);color:var(--on);font-weight:700;padding:6px 14px;border-radius:10px;font-size:12.5px}
+.field{background:var(--surface);border:1px dashed var(--c);border-radius:10px;padding:7px 10px;font-family:var(--font-mono);font-size:12px;color:var(--fg);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.navmock{display:flex;gap:6px;flex-wrap:wrap}
+.navmock span{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:4px 9px;font-size:12px;color:var(--muted)}
+.navmock span.hit{background:var(--c);color:var(--on);border-color:var(--c);font-weight:700}
+.term{background:var(--code-bg);color:var(--code-fg);border-radius:10px;padding:10px 12px;font-family:var(--font-mono);font-size:12px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+
+/* tables */
+.scroll{overflow-x:auto;margin:16px 0;border:1px solid var(--line);border-radius:14px;background:var(--surface);max-width:100%}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14.5px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--soft);color:var(--ink);font-size:12.5px;text-transform:uppercase;letter-spacing:.08em}
+tr:last-child td{border-bottom:0}
+
+/* glossary */
+.gtools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:20px 0 14px}
+.gtools input{flex:1 1 220px;min-width:0;font:500 15px var(--font-body);color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+.filters{display:flex;flex-wrap:wrap;gap:6px}
+.filters button{font:600 13px var(--font-body);border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:6px 13px;border-radius:999px;cursor:pointer}
+.filters button[aria-pressed="true"]{background:var(--c);border-color:var(--c);color:var(--on)}
+.gcount{font-size:13px;color:var(--muted);margin:0 0 10px}
+.gl{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+.gl article{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;min-width:0}
+.gl article h4{margin:0 0 4px;font-size:17.5px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.gl .cat{font:700 11px var(--font-body);letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--soft);color:var(--ink)}
+.gl p{font-size:14.5px;margin:0 0 6px}
+.gl .eg{color:var(--muted);font-size:13.5px}
+.gl .eg b{color:var(--ink)}
+.empty{padding:20px;color:var(--muted)}
+
+.foot{margin-top:70px;padding-top:20px;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
+
+@media (max-width:900px){
+  .wrap{grid-template-columns:minmax(0,1fr);gap:0;padding-top:0}
+  .toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:11;flex-direction:row;gap:6px;max-height:none;overflow-x:auto;overflow-y:hidden;background:var(--bg);padding:10px 0;margin-bottom:18px;border-bottom:1px solid var(--line)}
+  .toc .brand{display:none}
+  .toc a{border:1px solid var(--line);background:var(--surface);flex:none}
+  .cover{grid-template-columns:minmax(0,1fr)}
+  .tiles{max-width:200px}
+  .chapter-head{grid-template-columns:minmax(0,1fr);padding:22px}
+  html{scroll-padding-top:70px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+
+<div class="wrap">
+<nav class="toc" id="toc" aria-label="Chapters">
+  <div class="brand"><span style="display:flex;gap:3px"><i style="width:9px;height:9px;border-radius:50%;background:var(--blue)"></i><i style="width:9px;height:9px;border-radius:50%;background:var(--red)"></i><i style="width:9px;height:9px;border-radius:50%;background:var(--yellow)"></i><i style="width:9px;height:9px;border-radius:50%;background:var(--green)"></i></span>Handbook</div>
+  <a class="c-blue" href="#start"><i></i>1 · Start here</a>
+  <a class="c-red" href="#words"><i></i>2 · Words to know</a>
+  <a class="c-green" href="#ml"><i></i>3 · AI and ML basics</a>
+  <a class="c-yellow" href="#llm"><i></i>4 · How LLMs work</a>
+  <a class="c-blue" href="#openai"><i></i>5 · OpenAI API</a>
+  <a class="c-red" href="#prompting"><i></i>6 · Prompting</a>
+  <a class="c-green" href="#langchain"><i></i>7 · LangChain</a>
+  <a class="c-yellow" href="#rag"><i></i>8 · RAG</a>
+  <a class="c-blue" href="#agents"><i></i>9 · Agentic AI</a>
+  <a class="c-red" href="#firstai"><i></i>10 · Your first AI</a>
+  <a class="c-green" href="#automation"><i></i>11 · Automation</a>
+  <a class="c-red" href="#advanced"><i></i>12 · Production</a>
+  <a class="c-yellow" href="#career"><i></i>13 · Career plan</a>
+  <a class="c-green" href="#google"><i></i>14 · Road to Google</a>
+  <a class="c-blue" href="#cheatsheet"><i></i>15 · Cheat sheet</a>
+</nav>
+
+<main>
+<header class="cover">
+  <div>
+    <div class="kicker">Beginner to advanced</div>
+    <h1>AI Engineer <span>Handbook</span></h1>
+    <p class="sub">Learn AI, machine learning, LLMs, OpenAI, LangChain and agents. Every term explained, every code block explained line by line.</p>
+    <div class="chips">
+      <span class="chip c-blue">Python code</span><span class="chip c-red">70+ terms</span><span class="chip c-yellow">Build projects</span><span class="chip c-green">Career plan</span>
+    </div>
+  </div>
+  <div class="tiles" aria-hidden="true"><div class="t1">AI</div><div class="t2">ML</div><div class="t3">LLM</div><div class="t4">&lt;/&gt;</div></div>
+</header>
+
+<!-- 1 -->
+<section class="chapter c-blue" id="start">
+  <div class="chapter-head">
+    <div class="num">1</div>
+    <div>
+      <h2>Start here</h2>
+      <p class="lead">What you will build, how to use this book, and the setup you need before any code runs.</p>
+      <ul class="learn"><li>Roadmap</li><li>Python setup</li><li>Project folder</li></ul>
+    </div>
+  </div>
+
+  <h3>The six stages</h3>
+  <p>AI engineering is a stack of skills. Each stage below matches chapters in this book. Times assume 8 to 10 hours a week.</p>
+  <div class="grid">
+    <div class="card c-blue"><span class="badge">Weeks 1-4</span><h4>Python and tools</h4><p>Functions, files, JSON, APIs, git, virtual environments. Chapters 1 and 5.</p></div>
+    <div class="card c-green"><span class="badge">Weeks 5-10</span><h4>ML foundations</h4><p>Data, training, testing, overfitting, scikit-learn. Chapters 2 and 3.</p></div>
+    <div class="card c-yellow"><span class="badge">Weeks 11-14</span><h4>LLM apps</h4><p>OpenAI API, prompts, structured output. Chapters 4, 5, 6.</p></div>
+    <div class="card c-red"><span class="badge">Weeks 15-20</span><h4>LangChain and RAG</h4><p>Chains, embeddings, search over your own documents. Chapters 7 and 8.</p></div>
+    <div class="card c-blue"><span class="badge">Weeks 21-26</span><h4>Agents and automation</h4><p>Tool calling, agent loops, scheduled pipelines. Chapters 9 to 12.</p></div>
+    <div class="card c-green"><span class="badge">Ongoing</span><h4>Ship and show</h4><p>Deploy projects, write about them, apply. Chapter 13.</p></div>
+  </div>
+
+  <div class="callout mentor"><span class="tag">Mentor note</span>
+    <p>This book gets you building in days. A job needs more: solid Python, data structures, git, deployment, and three finished projects you can demo. Certificates alone rarely get interviews. Shipped projects do. Treat every chapter as something to build, not something to read.</p>
+  </div>
+
+  <h3>One-time setup</h3>
+  <p>You need Python 3.10 or newer. Create a folder, make a virtual environment (an isolated box for this project's packages), and install what the book uses.</p>
+  <figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>terminal</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="bash"># 1. make a project folder
+mkdir ai-handbook
+cd ai-handbook
+
+# 2. create and activate a virtual environment
+python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+
+# 3. install the packages used in this book
+pip install openai langchain langchain-openai python-dotenv numpy scikit-learn tiktoken</code></pre></figure>
+  <div class="walk"><span class="walk-label">How it works</span><p>The first command, <code>python -m venv .venv</code>, creates a hidden folder holding a private interpreter and its own package directory, so two projects can depend on different versions of the same library without conflict. Activating it puts that interpreter first on your PATH, which is why <code>(.venv)</code> appears in your prompt.</p><p><code>pip install</code> then fetches the packages. <code>openai</code> is the official client, <code>langchain</code> and <code>langchain-openai</code> provide the application framework and its OpenAI bridge, <code>python-dotenv</code> loads secrets from a file, <code>numpy</code> and <code>scikit-learn</code> cover numerical and classical ML work, and <code>tiktoken</code> counts tokens. Once the project works, run <code>pip freeze &gt; requirements.txt</code> to record exact versions so it can be rebuilt on another machine.</p></div>
+</section>
+
+<!-- 2 -->
+<section class="chapter c-red" id="words">
+  <div class="chapter-head">
+    <div class="num">2</div>
+    <div>
+      <h2>Words to know</h2>
+      <p class="lead">AI has its own vocabulary. Learn these terms once and every tutorial, doc page and interview becomes readable.</p>
+      <ul class="learn"><li>Searchable glossary</li><li>Plain-English meanings</li><li>Real examples</li></ul>
+    </div>
+  </div>
+  <div class="gtools">
+    <input id="gsearch" type="search" placeholder="Search a term, e.g. token, RAG, agent" aria-label="Search glossary" autocomplete="off">
+    <div class="filters" id="gfilters" role="group" aria-label="Filter by group"></div>
+  </div>
+  <p class="gcount" id="gcount"></p>
+  <div class="gl" id="gl"></div>
+</section>
+
+<!-- 3 -->
+<section class="chapter c-green" id="ml">
+  <div class="chapter-head">
+    <div class="num">3</div>
+    <div>
+      <h2>AI and ML basics</h2>
+      <p class="lead">Before LLMs, learn the idea underneath all of it: a model learns patterns from data, then predicts on data it has never seen.</p>
+      <ul class="learn"><li>Training vs testing</li><li>scikit-learn</li><li>Overfitting</li></ul>
+    </div>
+  </div>
+
+  <h3>The three kinds of learning</h3>
+  <div class="grid">
+    <div class="card c-blue"><span class="badge">Supervised</span><h4>Learn from answers</h4><p>You give examples with correct labels. Predict house prices, spot spam.</p></div>
+    <div class="card c-red"><span class="badge">Unsupervised</span><h4>Find structure</h4><p>No labels. The model groups similar things, like customer segments.</p></div>
+    <div class="card c-green"><span class="badge">Reinforcement</span><h4>Learn from reward</h4><p>An agent tries actions and gets scores. Game players, robots, and parts of LLM training.</p></div>
+  </div>
+
+  <h3>Your first model</h3>
+  <p>This program trains a model to tell three flower species apart from four measurements, then checks itself on flowers it never saw during training.</p>
+  <figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>first_model.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+
+# 1. load data: X = measurements, y = species label
+X, y = load_iris(return_X_y=True)
+
+# 2. hold back 20% of the data for testing
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# 3. create and train the model
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+# 4. predict on unseen data and score it
+predictions = model.predict(X_test)
+print("Accuracy:", accuracy_score(y_test, predictions))</code></pre></figure>
+  <div class="walk"><span class="walk-label">How it works</span><p>The scikit-learn loader returns the data as two arrays: <code>X</code> holds the features, four measurements per flower, and <code>y</code> holds the labels, the species encoded as 0, 1 or 2. <code>train_test_split</code> shuffles the rows and keeps 20 percent aside, and fixing <code>random_state</code> makes the shuffle reproducible so that two runs can be compared fairly.</p><p>A random forest is an ensemble of many decision trees, each trained on a random sample of rows and features, whose votes are combined. The averaging is what makes it far harder to overfit than a single tree. Calling <code>fit</code> is training, <code>predict</code> is inference on rows the model has never seen, and <code>accuracy_score</code> is the fraction of predictions that match the true labels. The discipline to remember is the split: any number you report must come from data the model did not learn from.</p></div>
+  <div class="callout def"><span class="tag">Key idea</span>
+    <p>Always test on data the model did not train on. A model that scores 100% on its own training data may have memorised it. That failure is called overfitting.</p>
+  </div>
+
+  <h3>Neural networks in one minute</h3>
+  <p>A neural network is layers of small maths units. Each unit multiplies its inputs by weights, adds them up, and passes the result on. Training adjusts millions of weights until predictions improve. A loss function measures how wrong the model is, and gradient descent nudges the weights to lower that loss. LLMs are neural networks with billions of weights.</p>
+
+  <h3>How learning actually works: gradient descent</h3>
+  <p>Training is optimisation. A model has parameters, a loss function scores how wrong it is, and gradient descent repeatedly moves every parameter a small step in the direction that reduces the loss. The derivative of the loss with respect to a parameter, called the gradient, tells you which direction that is. In a deep network the gradients of all layers are computed efficiently by backpropagation, which applies the chain rule from the output back to the input. The program below does the whole procedure for the simplest possible model, a straight line, so that every step is visible.</p>
+<figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>gradient_descent.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">import numpy as np
+
+rng = np.random.default_rng(0)
+X = rng.uniform(0, 10, size=100)
+y = 3.0 * X + 5.0 + rng.normal(0, 1.0, size=100)   # true line y = 3x + 5, plus noise
+
+w, b = 0.0, 0.0      # start knowing nothing
+lr = 0.01            # learning rate: the step size
+
+for epoch in range(2000):
+    pred = w * X + b
+    error = pred - y
+    loss = (error ** 2).mean()          # mean squared error
+
+    grad_w = 2 * (error * X).mean()     # d loss / d w
+    grad_b = 2 * error.mean()           # d loss / d b
+
+    w -= lr * grad_w                    # step against the gradient
+    b -= lr * grad_b
+
+    if epoch % 400 == 0:
+        print(f"epoch {epoch:4d}  loss {loss:8.3f}  w {w:.2f}  b {b:.2f}")
+
+print("learned:", round(w, 2), round(b, 2))</code></pre></figure>
+<div class="walk"><span class="walk-label">How it works</span><p>The data is generated from a known line plus noise, so you can check what the model ought to find. The model is <code>w * X + b</code> and the loss is the mean squared error. Differentiating that loss gives <code>2 * mean(error * X)</code> for the weight and <code>2 * mean(error)</code> for the bias, which are the two <code>grad</code> lines, and this is backpropagation in its smallest form. The update subtracts each gradient scaled by the learning rate.</p><p>Run it and the loss falls from about 540 to about 0.94, while <code>w</code> and <code>b</code> settle near 3 and 5, with the remaining loss being the noise you added. A learning rate that is too large overshoots and diverges, and one that is too small crawls, so try 0.1 and 0.0001 to see both failures. Neural networks do exactly this with millions or billions of parameters, using an optimiser such as Adam, which adapts the step size per parameter, in place of the plain update.</p></div>
+  <h3>Evaluate like an engineer</h3>
+  <p>Accuracy alone is a weak report card. If 98 percent of emails are not spam, a model that never flags anything scores 98 percent and is useless. Serious evaluation uses several tools: precision and recall for imbalanced classes, cross-validation to measure variance, and a pipeline that keeps preprocessing inside the training fold.</p>
+<figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>cv_pipeline.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">from sklearn.datasets import load_breast_cancer
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import cross_val_score
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+
+X, y = load_breast_cancer(return_X_y=True)
+
+model = make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000))
+scores = cross_val_score(model, X, y, cv=5, scoring="f1")
+
+print("F1 per fold:", scores.round(3))
+print("Mean F1:", scores.mean().round(3), "+/-", scores.std().round(3))</code></pre></figure>
+<div class="walk"><span class="walk-label">How it works</span><p>Five-fold cross-validation splits the data into five parts, trains on four, tests on the fifth, and rotates through all five. You get every score, so you see the variance as well as the average instead of trusting one lucky split. Wrapping the scaler and the classifier in a pipeline is not cosmetic: the scaler is re-fitted inside each training fold, so no statistics from the test fold leak into training. That kind of data leakage is the most common reason a model looks excellent in a notebook and fails in production.</p><p>F1 is the harmonic mean of precision, the fraction of positive predictions that were right, and recall, the fraction of real positives that were found. It is the better headline whenever classes are imbalanced, because accuracy can look high for a model that never predicts the rare class.</p></div></section>
+
+<!-- 4 -->
+<section class="chapter c-yellow" id="llm">
+  <div class="chapter-head">
+    <div class="num">4</div>
+    <div>
+      <h2>How LLMs work</h2>
+      <p class="lead">A large language model reads text as tokens and predicts the next token, over and over. That one trick powers chat, code and agents.</p>
+      <ul class="learn"><li>Tokens</li><li>Context window</li><li>Temperature</li></ul>
+    </div>
+  </div>
+
+  <h3>Tokens: how the model sees text</h3>
+  <p>Models do not read letters or words. They read tokens, which are chunks of text turned into numbers. You pay per token and the context window is measured in tokens, so counting them is a daily skill.</p>
+  <figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>tokens.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">import tiktoken
+
+enc = tiktoken.get_encoding("o200k_base")
+
+text = "Hello, Kolkata! Learning AI is fun."
+tokens = enc.encode(text)
+
+print(tokens)              # the numbers the model sees
+print(len(tokens))         # how many tokens this text costs
+print(enc.decode(tokens))  # turn numbers back into text</code></pre></figure>
+  <div class="walk"><span class="walk-label">How it works</span><p><code>tiktoken.get_encoding</code> loads the tokenizer, a vocabulary built with byte-pair encoding, an algorithm that starts from bytes and repeatedly merges the most frequent neighbouring pairs into new tokens. That is why a common word becomes one token while rare words, names and code identifiers split into several pieces.</p><p><code>encode</code> returns a list of integers, which is the real input the network receives, and the length of that list is what you are billed for and what counts against the context window. English averages about four characters per token, but text in other scripts such as Bengali or Hindi often needs more tokens for the same meaning, which makes such prompts costlier. <code>decode</code> reverses the mapping exactly, so tokenization is a lossless code. Different model families use different encodings, so always count with the one that matches your model.</p></div>
+
+  <h3>Temperature: controlling randomness</h3>
+  <p>For each next token the model produces scores. Temperature rescales those scores before choosing. Low temperature makes the top choice dominate. High temperature gives other choices a real chance. This tiny program shows it with numbers.</p>
+  <figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>temperature_demo.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">import numpy as np
+
+def softmax(scores, temperature=1.0):
+    scaled = np.array(scores) / temperature
+    exp = np.exp(scaled - scaled.max())
+    return exp / exp.sum()
+
+words = ["cat", "dog", "car"]
+scores = [2.0, 1.0, 0.1]
+
+for t in (0.2, 1.0, 2.0):
+    probs = softmax(scores, t).round(2)
+    print("temperature", t, dict(zip(words, probs)))</code></pre></figure>
+  <div class="walk"><span class="walk-label">How it works</span><p>The list <code>scores</code> stands in for the raw outputs, called logits, that a network produces for each candidate next token. Dividing by the temperature before the softmax changes how sharp the distribution is. Below 1 the gaps widen and the top word dominates, above 1 they shrink and unlikely words get a real chance.</p><p>Subtracting the maximum before exponentiating changes nothing mathematically but prevents numeric overflow, a standard stability trick. Softmax then turns the scores into probabilities that sum to one. Run it and you will see <code>cat</code> take almost everything at 0.2 while the three words converge at 2.0. A temperature of 0 is the limiting case where the highest score always wins, though hosted models can still vary slightly between runs.</p></div>
+
+  <h3>Four facts that explain most LLM behaviour</h3>
+  <ul class="plain">
+    <li><b>Context window.</b> The model only sees what is in the current conversation, up to a token limit. It has no memory between calls unless you send the history again.</li>
+    <li><b>Hallucination.</b> The model produces likely text, not verified facts. It can sound sure and be wrong. Fix it by giving sources (RAG, chapter 8) and checking outputs.</li>
+    <li><b>Training vs prompting.</b> Pre-training teaches language. Fine-tuning adjusts behaviour. Prompting and RAG change what the model sees at run time and are cheaper to try first.</li>
+    <li><b>Cost.</b> You pay for input and output tokens. Long prompts and long histories cost more.</li>
+  </ul>
+
+  <h3>Inside the transformer: attention</h3>
+  <p>Each token is a vector. A transformer layer projects every token into three vectors: a query (what am I looking for), a key (what do I contain) and a value (what will I pass on). The attention weight between two tokens is the softmax of the scaled dot product of one token's query with the other's key, and the output for a token is the weighted sum of the values. Stack many such layers, each with several attention heads running in parallel plus a feed-forward network, and you have the architecture behind every modern LLM.</p>
+<figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>attention.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">import numpy as np
+
+def softmax(x, axis=-1):
+    e = np.exp(x - x.max(axis=axis, keepdims=True))
+    return e / e.sum(axis=axis, keepdims=True)
+
+def attention(Q, K, V, causal=True):
+    d = Q.shape[-1]
+    scores = Q @ K.T / np.sqrt(d)                 # every query against every key
+    if causal:
+        future = np.triu(np.ones_like(scores), k=1).astype(bool)
+        scores = np.where(future, -1e9, scores)   # block looking ahead
+    weights = softmax(scores)
+    return weights @ V, weights
+
+rng = np.random.default_rng(1)
+T, d = 5, 8                                       # 5 tokens, 8 dimensions each
+x = rng.normal(size=(T, d))
+Wq, Wk, Wv = (rng.normal(size=(d, d)) for _ in range(3))
+
+out, weights = attention(x @ Wq, x @ Wk, x @ Wv)
+print(weights.round(2))
+print(out.shape)</code></pre></figure>
+<div class="walk"><span class="walk-label">How it works</span><p>The function computes <code>Q @ K.T</code>, a matrix scoring every query against every key, and divides by the square root of the dimension so that scores do not grow with size and push the softmax into regions where gradients vanish. The causal mask sets scores for future positions to a huge negative number, so after the softmax their weight is zero. That mask is what lets a language model learn to predict the next token using only the past.</p><p>Each row of the printed weight matrix sums to one and shows how much a token draws from each earlier token, with zeros above the diagonal. The matrix is T by T, so attention cost grows with the square of the sequence length, which is why long contexts are expensive. Attention alone has no sense of order, so real models add positional information, such as rotary embeddings, and use many heads so that different heads can specialise in different relationships such as syntax, coreference or copying.</p></div>
+  <h3>Sampling beyond temperature</h3>
+  <p>APIs also expose nucleus sampling, usually called top-p. Instead of reshaping the whole distribution, it trims the unlikely tail and samples only from the most probable tokens that together cover probability p.</p>
+<figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>top_p.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">import numpy as np
+
+def top_p_sample(probs, p=0.9, rng=None):
+    rng = rng or np.random.default_rng()
+    order = np.argsort(probs)[::-1]                 # most likely first
+    cumulative = np.cumsum(probs[order])
+    keep = order[: np.searchsorted(cumulative, p) + 1]
+    kept = probs[keep] / probs[keep].sum()          # renormalise the survivors
+    return rng.choice(keep, p=kept)
+
+probs = np.array([0.50, 0.30, 0.10, 0.07, 0.03])
+rng = np.random.default_rng(0)
+print([int(top_p_sample(probs, 0.9, rng)) for _ in range(10)])</code></pre></figure>
+<div class="walk"><span class="walk-label">How it works</span><p><code>top_p_sample</code> sorts tokens by probability, accumulates the totals, and keeps the smallest set whose cumulative probability reaches <code>p</code>. Everything outside that nucleus is discarded and the survivors are renormalised before sampling. Compared with a fixed top-k, the nucleus adapts: when the model is confident it keeps one or two tokens, and when it is uncertain it keeps many. In practice change either temperature or top-p, not both, and keep both low for extraction and classification.</p></div>
+  <h3>How a chat model is built, and why inference is expensive</h3>
+  <p>A chat model is made in stages. Pre-training trains a transformer to predict the next token over trillions of tokens of text and code, and this is where nearly all knowledge and capability come from. Supervised fine-tuning then trains it on curated pairs of instructions and good responses so it behaves like an assistant. Preference optimisation, through reinforcement learning from human feedback or simpler methods such as DPO, nudges it toward answers that people or reward models rank higher. Reasoning models add reinforcement learning on problems with checkable answers, which teaches them to spend extra tokens thinking before they reply.</p>
+  <p>At inference time, the model generates one token at a time. To avoid recomputing attention over the whole prompt for every new token, servers keep a KV cache of the keys and values of earlier tokens, so each step is cheap, but the cache grows with context length and dominates GPU memory in long conversations. Quantization stores weights in 8 or 4 bits instead of 16, cutting memory and cost at a small quality loss, and batching serves many users on one GPU. These details explain the pricing you see: input tokens are cheaper than output tokens, long contexts cost more, and smaller models are much faster.</p>
+</section>
+
+<!-- 5 -->
+<section class="chapter c-blue" id="openai">
+  <div class="chapter-head">
+    <div class="num">5</div>
+    <div>
+      <h2>OpenAI API</h2>
+      <p class="lead">Get a key, make your first call, then learn streaming, JSON output and the newer Responses API.</p>
+      <ul class="learn"><li>API key setup</li><li>Chat completions</li><li>Streaming</li><li>JSON output</li></ul>
+    </div>
+  </div>
+
+  <h3>Get your API key in five steps</h3>
+  <p>An API key is a secret password that lets your code use the service and bills your account. The screens may look slightly different when OpenAI updates its site, but the path stays the same.</p>
+  <div class="steps">
+    <div class="step c-blue"><div class="mock"><div class="bar">platform.openai.com</div><span class="btn">Sign up</span></div>
+      <div class="body"><h4><b class="n1">1</b>Create an account</h4><p>Open the OpenAI developer platform and sign up. This is separate from the chat app subscription.</p></div></div>
+    <div class="step c-red"><div class="mock"><div class="navmock"><span>Overview</span><span>Billing</span><span class="hit">Add credits</span></div><div class="field">Balance: $0.00 → add a small amount</div></div>
+      <div class="body"><h4><b class="n1">2</b>Add a small balance</h4><p>API usage is billed per token. A few dollars covers hundreds of practice calls.</p></div></div>
+    <div class="step c-yellow"><div class="mock"><div class="navmock"><span>Settings</span><span class="hit">API keys</span><span>Usage</span></div><span class="btn">Create new secret key</span></div>
+      <div class="body"><h4><b class="n1">3</b>Create a secret key</h4><p>Go to the API keys page, press the create button, and name it, for example <code>handbook</code>.</p></div></div>
+    <div class="step c-green"><div class="mock"><div class="field">sk-••••••••••••••••••••</div><span class="btn">Copy</span></div>
+      <div class="body"><h4><b class="n1">4</b>Copy it right away</h4><p>The full key is shown only once. Paste it into a safe place now. Never post it online or commit it to git.</p></div></div>
+    <div class="step c-blue"><div class="mock"><div class="term">$ echo "OPENAI_API_KEY=sk-..." &gt; .env</div><div class="term">$ echo ".env" &gt;&gt; .gitignore</div></div>
+      <div class="body"><h4><b class="n1">5</b>Save it in a .env file</h4><p>Put the key in a file named <code>.env</code> in your project folder and add that file to <code>.gitignore</code> so git skips it.</p></div></div>
+  </div>
+  <div class="callout warn"><span class="tag">Never do this</span>
+    <p>Do not paste your key directly into code that you share or upload to GitHub. Bots scan public repositories for keys within minutes. If a key leaks, delete it on the API keys page and create a new one.</p>
+  </div>
+
+  <h3>Your first AI call</h3>
+  <figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>hello_ai.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()                 # read OPENAI_API_KEY from the .env file
+client = OpenAI()             # the client finds the key automatically
+
+MODEL = "gpt-4o-mini"         # check the docs for the current model list
+
+response = client.chat.completions.create(
+    model=MODEL,
+    messages=[
+        {"role": "system", "content": "You are a patient AI tutor for beginners."},
+        {"role": "user", "content": "Explain what a token is in two sentences."},
+    ],
+    temperature=0.3,
+)
+
+print(response.choices[0].message.content)
+print("Tokens used:", response.usage.total_tokens)</code></pre></figure>
+  <div class="walk"><span class="walk-label">How it works</span><p><code>load_dotenv</code> copies the entries of <code>.env</code> into the process environment, and <code>OpenAI()</code> reads <code>OPENAI_API_KEY</code> from there, so the secret never appears in source code. <code>MODEL</code> is a variable on purpose: model names are retired and replaced regularly, and one constant turns an upgrade into a one-line change.</p><p>The <code>messages</code> list is the whole conversation, because the API is stateless. The <code>system</code> message sets role and rules, <code>user</code> messages are the questions, and <code>assistant</code> messages are earlier replies that you send back to simulate memory. A temperature of 0.3 keeps the answer focused. The reply lives at <code>response.choices[0].message.content</code>, where <code>choices</code> is a list because the API can return several candidates. <code>response.usage</code> reports prompt and completion tokens, numbers worth logging from day one because they are your cost.</p></div>
+  <div class="callout mentor"><span class="tag">Version note</span>
+    <p>The model name above is an example. Models are retired and replaced often. Before you build, open the OpenAI models page and pick a current, low-cost model for practice.</p>
+  </div>
+
+  <h3>Streaming: show words as they arrive</h3>
+  <figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>stream.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
+client = OpenAI()
+
+stream = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[{"role": "user", "content": "Write a 4-line poem about debugging."}],
+    stream=True,
+)
+
+for chunk in stream:
+    piece = chunk.choices[0].delta.content
+    if piece:
+        print(piece, end="", flush=True)
+print()</code></pre></figure>
+  <div class="walk"><span class="walk-label">How it works</span><p>With <code>stream=True</code> the call returns an iterator instead of a finished response, and the server sends the answer as a series of small chunks over one open connection. Each chunk carries a <code>delta</code>, the new fragment of text, which can be empty on the first and last chunks, so the <code>if piece</code> guard skips those.</p><p>Printing with <code>end=""</code> and <code>flush=True</code> avoids line breaks and forces the text to appear at once instead of waiting in a buffer. Streaming does not make generation faster, but it shortens the time to first token that a user perceives, which is what makes a chat interface feel responsive.</p></div>
+
+  <h3>Get JSON back, not prose</h3>
+  <p>Programs need predictable data. Ask for JSON and parse it.</p>
+  <figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>json_output.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">import json
+from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
+client = OpenAI()
+
+prompt = """Extract the details from this text and reply with JSON only,
+using the keys: name, role, skills (a list).
+
+Text: Riya is a backend developer who knows Python, Docker and SQL."""
+
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[{"role": "user", "content": prompt}],
+    response_format={"type": "json_object"},
+)
+
+data = json.loads(response.choices[0].message.content)
+print(data["name"], data["skills"])</code></pre></figure>
+  <div class="walk"><span class="walk-label">How it works</span><p>The prompt names the exact keys you want and contains the word JSON, which JSON mode requires. The <code>response_format</code> argument constrains the model to emit syntactically valid JSON, and <code>json.loads</code> turns that text into a Python dictionary.</p><p>Valid syntax is not the same as correct content. The model can still omit a key or invent a value, so production code validates the result, for example with a Pydantic model, and handles failure explicitly. When you need stronger guarantees, look at the structured outputs feature, which enforces a full JSON Schema.</p></div>
+
+  <h3>The newer Responses API</h3>
+  <p>OpenAI also offers the Responses API, a simpler call that also supports built-in tools. The basic form is shorter. Learn Chat Completions first because the many tutorials and libraries you will meet use it, then try this.</p>
+  <figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>responses_api.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
+client = OpenAI()
+
+response = client.responses.create(
+    model="gpt-4o-mini",
+    instructions="You are a concise coding mentor.",
+    input="What is a Python list comprehension?",
+)
+print(response.output_text)</code></pre></figure>
+  <div class="walk"><span class="walk-label">How it works</span><p>The Responses API collapses the message list into two arguments. <code>instructions</code> plays the part of the system message, and <code>input</code> can be a plain string for a single turn or a list of messages. <code>output_text</code> joins the text parts of the result into one string.</p><p>The reason to learn it is that it also supports built-in tools and server-side conversation state, which reduces the plumbing you write yourself. The chat-completions pattern remains the one that most libraries and tutorials still use, so you need both.</p></div>
+
+  <h3>Production-grade calls: retries, timeouts, concurrency</h3>
+  <p>In a demo a call either works or you rerun it. In production calls fail for ordinary reasons: rate limits, dropped connections and slow responses. The official SDK already retries a couple of times by default, but you should understand the pattern so you can control it.</p>
+<figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>robust_call.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">import random
+import time
+from dotenv import load_dotenv
+from openai import OpenAI, RateLimitError, APIConnectionError, APITimeoutError
+
+load_dotenv()
+client = OpenAI(timeout=30, max_retries=0)    # we handle retries ourselves
+
+RETRYABLE = (RateLimitError, APIConnectionError, APITimeoutError)
+
+def call_with_retry(messages, model="gpt-4o-mini", attempts=5):
+    for attempt in range(attempts):
+        try:
+            return client.chat.completions.create(model=model, messages=messages)
+        except RETRYABLE:
+            if attempt == attempts - 1:
+                raise                                   # out of attempts: surface the error
+            wait = (2 ** attempt) + random.random()     # 1s, 2s, 4s, 8s plus jitter
+            time.sleep(wait)
+
+reply = call_with_retry([{"role": "user", "content": "Say hello in Bengali."}])
+print(reply.choices[0].message.content)</code></pre></figure>
+<div class="walk"><span class="walk-label">How it works</span><p>Only transient errors are retried: a rate limit, a lost connection or a timeout. A bad request or an invalid key will fail identically every time, so retrying it only wastes time. The wait doubles after each failure, which is exponential backoff, and the random jitter added to it stops many clients from retrying at the same instant and overloading the service again. The final attempt re-raises the error so that your monitoring sees it instead of the failure being swallowed. Setting <code>timeout</code> on the client guarantees that no call can hang forever.</p></div><figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>async_batch.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">import asyncio
+from dotenv import load_dotenv
+from openai import AsyncOpenAI
+
+load_dotenv()
+client = AsyncOpenAI()
+limit = asyncio.Semaphore(5)          # at most 5 requests in flight
+
+async def classify(text):
+    async with limit:
+        response = await client.chat.completions.create(
+            model="gpt-4o-mini",
+            temperature=0,
+            messages=[
+                {"role": "system", "content": "Reply with one word: POSITIVE, NEGATIVE or NEUTRAL."},
+                {"role": "user", "content": text},
+            ],
+        )
+        return response.choices[0].message.content.strip()
+
+async def main(texts):
+    return await asyncio.gather(*(classify(t) for t in texts))
+
+texts = ["Great course!", "The video froze twice.", "Class starts at 10."]
+print(asyncio.run(main(texts)))</code></pre></figure>
+<div class="walk"><span class="walk-label">How it works</span><p>Model calls spend almost all their time waiting on the network, so running them concurrently gives a large speed-up. <code>AsyncOpenAI</code> provides awaitable calls, <code>asyncio.gather</code> starts all the tasks and returns their results in the original order, and the semaphore caps how many are in flight so that you stay under your rate limit. Classifying a thousand items this way takes a fraction of the time of a plain loop.</p><p>Costs deserve the same engineering attention. Count tokens before sending, trim history, cap the output length, put stable instructions at the beginning of the prompt because providers can reuse the computation for a repeated prefix, and route easy tasks to a smaller model while keeping the larger one for hard cases. Log token usage per feature so that you notice when one prompt change doubles your bill.</p></div>
+</section>
+
+<!-- 6 -->
+<section class="chapter c-red" id="prompting">
+  <div class="chapter-head">
+    <div class="num">6</div>
+    <div>
+      <h2>Prompting</h2>
+      <p class="lead">A prompt is the program you give an LLM. Clear prompts are the cheapest way to improve any AI app.</p>
+      <ul class="learn"><li>Prompt anatomy</li><li>Few-shot examples</li><li>Prompt injection</li></ul>
+    </div>
+  </div>
+
+  <h3>The five parts of a strong prompt</h3>
+  <div class="grid">
+    <div class="card c-blue"><span class="badge">Role</span><h4>Who the AI is</h4><p>"You are a senior Python reviewer."</p></div>
+    <div class="card c-red"><span class="badge">Task</span><h4>What to do</h4><p>"Find bugs in the code below."</p></div>
+    <div class="card c-yellow"><span class="badge">Context</span><h4>What it needs</h4><p>The code, the error message, the user's level.</p></div>
+    <div class="card c-green"><span class="badge">Format</span><h4>How to answer</h4><p>"Reply as a numbered list, max 5 items."</p></div>
+    <div class="card c-blue"><span class="badge">Examples</span><h4>Show, don't tell</h4><p>Two sample inputs with ideal outputs.</p></div>
+  </div>
+
+  <h3>Few-shot prompting in code</h3>
+  <p>Giving examples teaches the model your exact format. Here it learns to label the mood of a message.</p>
+  <figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>few_shot.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
+client = OpenAI()
+
+messages = [
+    {"role": "system", "content": "Classify the message as POSITIVE, NEGATIVE or NEUTRAL. Reply with the label only."},
+    {"role": "user", "content": "The new update is fantastic!"},
+    {"role": "assistant", "content": "POSITIVE"},
+    {"role": "user", "content": "My order never arrived."},
+    {"role": "assistant", "content": "NEGATIVE"},
+    {"role": "user", "content": "The meeting is at 4 pm."},
+    {"role": "assistant", "content": "NEUTRAL"},
+    {"role": "user", "content": "I waited an hour and nobody replied."},
+]
+
+response = client.chat.completions.create(model="gpt-4o-mini", messages=messages, temperature=0)
+print(response.choices[0].message.content)</code></pre></figure>
+  <div class="walk"><span class="walk-label">How it works</span><p>A few-shot prompt teaches by demonstration. The system message defines the label set and the output format, each user and assistant pair is a worked example that the model imitates, and the last user message is the real input. The examples also fix the format, one upper-case word, which lets your code compare the output directly with an expected label.</p><p>Temperature 0 removes sampling noise from classification. Choose examples that cover hard edge cases rather than obvious ones, and keep their label balance realistic, because models are sensitive to both the order and the proportion of examples.</p></div>
+
+  <h3>Habits that improve results</h3>
+  <ul class="plain">
+    <li>Say what to do, not only what to avoid.</li>
+    <li>Put long documents in clearly marked sections such as <code>Document:</code> and <code>Question:</code>.</li>
+    <li>Ask for step-by-step reasoning on hard problems, then ask for a short final answer.</li>
+    <li>Change one thing at a time and compare outputs on the same five test inputs. This is the start of evals.</li>
+  </ul>
+  <div class="callout warn"><span class="tag">Security</span>
+    <p>Prompt injection is when text the model reads (a web page, an email) contains hidden instructions like "ignore your rules". Treat all outside text as untrusted data. Never let a model run powerful actions on instructions it found in a document without a check.</p>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="chapter c-green" id="langchain">
+  <div class="chapter-head">
+    <div class="num">7</div>
+    <div>
+      <h2>LangChain</h2>
+      <p class="lead">LangChain gives you building blocks for LLM apps: prompt templates, model wrappers, parsers and tools that snap together.</p>
+      <ul class="learn"><li>Prompt templates</li><li>Chains with |</li><li>Structured output</li><li>Chat memory</li></ul>
+    </div>
+  </div>
+
+  <div class="callout def"><span class="tag">Why use it</span>
+    <p>You can call OpenAI directly (chapter 5). LangChain helps when you want to swap models easily, reuse prompt templates, connect tools and document loaders, or build agents. Start with the direct API so you understand what LangChain is doing for you.</p>
+  </div>
+
+  <h3>Your first chain</h3>
+  <figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>lc_chain.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.output_parsers import StrOutputParser
+
+load_dotenv()
+
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.3)
+
+prompt = ChatPromptTemplate.from_messages([
+    ("system", "You are a {role}. Answer in {style}."),
+    ("human", "{question}"),
+])
+
+chain = prompt | llm | StrOutputParser()
+
+answer = chain.invoke({
+    "role": "friendly CS mentor",
+    "style": "three short bullet points",
+    "question": "What is RAG?",
+})
+print(answer)</code></pre></figure>
+  <div class="walk"><span class="walk-label">How it works</span><p>A <code>ChatPromptTemplate</code> is a function from a dictionary to a list of messages, with the names in curly braces acting as slots. The pipe operator joins components that share a common interface called a Runnable, so <code>prompt | llm | StrOutputParser()</code> means: format the prompt, call the model, and extract the plain string from the message object.</p><p>This composition style is the LangChain Expression Language. Its value is that every chain automatically gains <code>invoke</code>, <code>batch</code> for running many inputs in parallel, and <code>stream</code>, with no extra code. Because the model is just another component, you can swap <code>ChatOpenAI</code> for another provider's class and leave the rest of the chain untouched.</p></div>
+
+  <h3>Structured output with Pydantic</h3>
+  <p>Describe the shape of the answer as a Python class. LangChain makes the model fill it in and hands you a real object.</p>
+  <figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>lc_structured.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">from dotenv import load_dotenv
+from pydantic import BaseModel, Field
+from langchain_openai import ChatOpenAI
+
+load_dotenv()
+
+class StudyPlan(BaseModel):
+    topic: str
+    weeks: int = Field(description="how many weeks the plan lasts")
+    steps: list[str] = Field(description="ordered learning steps")
+
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+structured_llm = llm.with_structured_output(StudyPlan)
+
+plan = structured_llm.invoke("Make a short study plan to learn pandas.")
+print(plan.topic, plan.weeks)
+for step in plan.steps:
+    print("-", step)</code></pre></figure>
+  <div class="walk"><span class="walk-label">How it works</span><p>The Pydantic class is a typed contract. Each field has a type that is validated at run time, and each <code>Field(description=...)</code> is passed to the model as part of the schema, so clear descriptions directly improve output quality.</p><p><code>with_structured_output</code> binds that schema to the model, using the provider's native tool-calling or structured-output feature underneath, and returns an instance of your class instead of text. So <code>plan.steps</code> is a real Python list, and a malformed answer raises an error rather than flowing silently into the rest of your program, which is exactly the property you want in an automated system.</p></div>
+
+  <h3>Chat with memory</h3>
+  <p>LLMs forget between calls. Memory means you store the past messages and send them again each time. Here is the plain version, which is what every framework does underneath.</p>
+  <figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>lc_memory.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
+
+load_dotenv()
+llm = ChatOpenAI(model="gpt-4o-mini")
+
+history = [SystemMessage(content="You are a helpful coding tutor.")]
+
+def chat(user_text):
+    history.append(HumanMessage(content=user_text))
+    reply = llm.invoke(history)
+    history.append(AIMessage(content=reply.content))
+    return reply.content
+
+print(chat("My name is Aman. What is a Python dictionary?"))
+print(chat("What is my name?"))</code></pre></figure>
+  <div class="walk"><span class="walk-label">How it works</span><p>Language models are stateless, so memory is only the practice of sending earlier messages again. The <code>history</code> list holds typed message objects, and every call to <code>chat</code> appends the user's turn, sends the entire list, and appends the reply. The second question works only because the first exchange is still in the list.</p><p>This design has a cost: the prompt grows each turn, so latency and price grow with it. Real applications trim the oldest turns, summarise them into a short note, or store facts in a database and retrieve only the relevant ones, which is the long-term memory pattern that agents use.</p></div>
+  <div class="callout mentor"><span class="tag">Version note</span>
+    <p>LangChain changes quickly. Import paths and helper functions move between versions. If a snippet fails with an import error, check the LangChain docs for your installed version with <code>pip show langchain</code>.</p>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="chapter c-yellow" id="rag">
+  <div class="chapter-head">
+    <div class="num">8</div>
+    <div>
+      <h2>RAG: chat with your data</h2>
+      <p class="lead">Retrieval-Augmented Generation looks up relevant text first, then asks the model to answer using only that text. It is the most common real-world LLM pattern.</p>
+      <ul class="learn"><li>Embeddings</li><li>Similarity search</li><li>Grounded answers</li></ul>
+    </div>
+  </div>
+
+  <h3>The idea in four steps</h3>
+  <div class="grid">
+    <div class="card c-blue"><span class="badge">1 Split</span><h4>Chunk documents</h4><p>Cut text into pieces of a few hundred words.</p></div>
+    <div class="card c-red"><span class="badge">2 Embed</span><h4>Turn text into numbers</h4><p>Each chunk becomes a vector that captures meaning.</p></div>
+    <div class="card c-yellow"><span class="badge">3 Search</span><h4>Find the closest chunks</h4><p>Embed the question and compare to every chunk.</p></div>
+    <div class="card c-green"><span class="badge">4 Answer</span><h4>Ask with context</h4><p>Paste the best chunks into the prompt and ask.</p></div>
+  </div>
+
+  <h3>RAG from scratch in 40 lines</h3>
+  <p>No vector database yet. Just embeddings and maths, so you see exactly how it works.</p>
+  <figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>mini_rag.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">import numpy as np
+from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
+client = OpenAI()
+
+docs = [
+    "The library opens at 9 am and closes at 6 pm on weekdays.",
+    "Students can borrow up to five books for fourteen days.",
+    "Late returns cost two rupees per day per book.",
+    "The reading room is on the second floor and is silent.",
+]
+
+def embed(texts):
+    result = client.embeddings.create(model="text-embedding-3-small", input=texts)
+    return np.array([item.embedding for item in result.data])
+
+doc_vectors = embed(docs)
+
+def search(question, k=2):
+    q = embed([question])[0]
+    scores = doc_vectors @ q / (np.linalg.norm(doc_vectors, axis=1) * np.linalg.norm(q))
+    best = scores.argsort()[::-1][:k]
+    return [docs[i] for i in best]
+
+def answer(question):
+    context = "\n".join(search(question))
+    prompt = f"""Answer using only the context. If the answer is not there, say you don't know.
+
+Context:
+{context}
+
+Question: {question}"""
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0,
+    )
+    return response.choices[0].message.content
+
+print(answer("How much is the fine if I return a book late?"))</code></pre></figure>
+  <div class="walk"><span class="walk-label">How it works</span><p>The program has two phases. In the indexing phase, <code>embed</code> sends text to an embedding model, which returns one high-dimensional vector per text, and the vectors for all documents are computed once and kept in <code>doc_vectors</code>. A real system stores them in a vector database.</p><p>In the query phase the question is embedded the same way and compared with every document using cosine similarity. The line with <code>@</code> computes a dot product divided by the product of the vector lengths, so only the direction of each vector matters. <code>argsort</code>, a reversal and a slice pick the <code>k</code> highest scores. The retrieved text is then placed in the prompt with an instruction to answer from it alone and to admit when the answer is missing, which is the mechanism that suppresses hallucination.</p><p>Notice that the question about a fine never uses the words late return, yet retrieval succeeds. Embeddings place texts with similar meaning close together regardless of exact wording, which is the whole point of semantic search.</p></div>
+
+  <h3>Making it production-ready</h3>
+  <ul class="plain">
+    <li>Use a vector database (Chroma, FAISS, pgvector, Pinecone, Qdrant) once you have more than a few thousand chunks.</li>
+    <li>Chunk with overlap so a sentence is not cut in half.</li>
+    <li>Return the source of each chunk so answers can show where they came from.</li>
+    <li>Test with 20 real questions and check retrieval first. Most bad RAG answers come from retrieving the wrong chunks.</li>
+  </ul>
+
+  <h3>Advanced retrieval</h3>
+  <p>The from-scratch version above works on four sentences. Real corpora expose the weak points, and most RAG quality problems are retrieval problems, not generation problems. Three techniques give the largest gains: chunking that respects structure, hybrid search that combines meaning with keywords, and a measurement loop so you know whether a change helped.</p>
+<figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>chunking.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">def chunk(text, size=800, overlap=150):
+    step = size - overlap
+    assert step > 0, "overlap must be smaller than size"
+    pieces = []
+    for start in range(0, len(text), step):
+        piece = text[start:start + size].strip()
+        if piece:
+            pieces.append({"text": piece, "start": start})
+    return pieces
+
+sample = "RAG systems retrieve context. " * 100
+chunks = chunk(sample)
+print(len(chunks), "chunks; first starts at", chunks[0]["start"], "second at", chunks[1]["start"])</code></pre></figure>
+<div class="walk"><span class="walk-label">How it works</span><p>Fixed-size windows with overlap are the simplest chunker. The overlap means a sentence that straddles a boundary still appears whole in at least one chunk. Storing the start offset with each chunk lets you cite where an answer came from. Better chunkers split on headings, paragraphs or sentences, keep a table or code block together, and attach metadata such as the document title, section and date, which you can later use to filter results. Chunk size is a trade-off: small chunks match precisely but lose context, large chunks keep context but dilute the embedding and waste prompt tokens, so test several sizes against your own questions.</p></div><figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>hybrid_search.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">def reciprocal_rank_fusion(rankings, k=60):
+    """Merge several ranked lists of document ids into one."""
+    scores = {}
+    for ranking in rankings:
+        for position, doc_id in enumerate(ranking):
+            scores[doc_id] = scores.get(doc_id, 0) + 1 / (k + position + 1)
+    return sorted(scores, key=scores.get, reverse=True)
+
+semantic = ["d3", "d1", "d7", "d2"]    # best matches by embedding similarity
+keyword = ["d1", "d5", "d3", "d9"]     # best matches by BM25 keyword search
+
+print(reciprocal_rank_fusion([semantic, keyword]))</code></pre></figure>
+<div class="walk"><span class="walk-label">How it works</span><p>Embeddings are strong at paraphrase but can miss exact strings such as error codes, product names or section numbers, where classic keyword ranking such as BM25 shines. Hybrid search runs both and merges the lists. Reciprocal rank fusion does this without needing comparable scores: each document earns <code>1 / (k + rank)</code> from every list it appears in, so documents ranked well by both rise to the top. In the example <code>d1</code> and <code>d3</code> win because both retrievers agree on them. A reranker, usually a cross-encoder model that reads the question and a candidate together, is often added as a final step to reorder the top twenty or so results before the best few go into the prompt.</p></div><figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>retrieval_eval.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">def hit_rate(test_cases, search, k=3):
+    """Fraction of questions whose correct chunk appears in the top k results."""
+    hits = 0
+    for question, expected_id in test_cases:
+        retrieved_ids = search(question, k)
+        hits += expected_id in retrieved_ids
+    return hits / len(test_cases)
+
+# toy search function standing in for your real retriever
+def fake_search(question, k):
+    return ["d1", "d2", "d3"][:k]
+
+tests = [("late fee?", "d3"), ("opening hours?", "d1"), ("reading room floor?", "d8")]
+print(f"hit rate @3: {hit_rate(tests, fake_search):.0%}")</code></pre></figure>
+<div class="walk"><span class="walk-label">How it works</span><p>This is the measurement loop that turns RAG from guesswork into engineering. You write twenty to fifty real questions and, for each, record which chunk contains the answer. <code>hit_rate</code> then reports how often the right chunk is in the top <code>k</code> results, and you rerun it after every change to chunk size, embedding model or search method. Check retrieval before you look at generation, because if the right text never reaches the prompt, no prompt can fix the answer. Later add generation checks, for example whether each claim in the answer is supported by the retrieved text, which is called faithfulness.</p><p>Other techniques worth knowing are query rewriting, where a model turns a vague question into a better search query, filtering by metadata before the vector search, and, for small corpora, skipping retrieval entirely and placing the whole document in a long context window, which can be simpler but costs more per call.</p></div>
+</section>
+
+<!-- 9 -->
+<section class="chapter c-blue" id="agents">
+  <div class="chapter-head">
+    <div class="num">9</div>
+    <div>
+      <h2>Agentic AI</h2>
+      <p class="lead">An agent is an LLM in a loop that can choose tools, use their results, and decide what to do next until the job is done.</p>
+      <ul class="learn"><li>Tool calling</li><li>Agent loop</li><li>LangChain agents</li><li>Safety</li></ul>
+    </div>
+  </div>
+
+  <h3>Chatbot vs agent</h3>
+  <div class="grid">
+    <div class="card c-red"><span class="badge">Chatbot</span><h4>Answers once</h4><p>You ask, it replies. It cannot look anything up or take action.</p></div>
+    <div class="card c-green"><span class="badge">Agent</span><h4>Plans and acts</h4><p>It decides to search, calculate, read a file or send a request, checks the result, and continues.</p></div>
+  </div>
+  <p>The core loop has four parts: <b>think</b> (decide what is needed), <b>act</b> (call a tool), <b>observe</b> (read the tool result), <b>repeat</b> or <b>finish</b>. Researchers call this pattern ReAct, short for reason and act.</p>
+
+  <h3>Build an agent with no framework</h3>
+  <p>This is the most important code in the book. Once you understand this loop, every agent framework makes sense.</p>
+  <figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>agent_loop.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">import json
+from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
+client = OpenAI()
+MODEL = "gpt-4o-mini"
+
+# 1. the tools: plain Python functions
+def add(a, b):
+    return a + b
+
+def word_length(word):
+    return len(word)
+
+TOOLS = {"add": add, "word_length": word_length}
+
+# 2. tool descriptions the model can read
+tool_specs = [
+    {"type": "function", "function": {
+        "name": "add",
+        "description": "Add two numbers and return the sum.",
+        "parameters": {"type": "object",
+            "properties": {"a": {"type": "number"}, "b": {"type": "number"}},
+            "required": ["a", "b"]}}},
+    {"type": "function", "function": {
+        "name": "word_length",
+        "description": "Count the letters in a word.",
+        "parameters": {"type": "object",
+            "properties": {"word": {"type": "string"}},
+            "required": ["word"]}}},
+]
+
+messages = [
+    {"role": "system", "content": "You are a helpful assistant. Use tools for any maths or counting."},
+    {"role": "user", "content": "How many letters are in 'extraordinary', plus 10?"},
+]
+
+# 3. the agent loop, capped at 5 steps
+for step in range(5):
+    response = client.chat.completions.create(
+        model=MODEL, messages=messages, tools=tool_specs
+    )
+    message = response.choices[0].message
+
+    if not message.tool_calls:          # no tool needed: this is the final answer
+        print("FINAL:", message.content)
+        break
+
+    messages.append(message)            # keep the model's tool request in history
+    for call in message.tool_calls:
+        args = json.loads(call.function.arguments)
+        result = TOOLS[call.function.name](**args)
+        print(f"step {step}: {call.function.name}({args}) -> {result}")
+        messages.append({
+            "role": "tool",
+            "tool_call_id": call.id,
+            "content": str(result),
+        })</code></pre></figure>
+  <div class="walk"><span class="walk-label">How it works</span><p>Everything an agent does reduces to this loop. The tools are ordinary functions, and <code>tool_specs</code> describes them to the model in JSON Schema: a name, a description and typed parameters. The model never sees your code, only that description, so a precise description is the most important thing you write for a tool.</p><p>On each pass the model either returns plain content, meaning it is finished, or returns <code>tool_calls</code>, a structured request naming a function and its JSON arguments. Your program, not the model, executes the function. It parses the arguments, calls the matching entry in <code>TOOLS</code>, and appends the result as a message with role <code>tool</code> and the same <code>tool_call_id</code>, which is how the API links answers to requests. The assistant message must be appended first, because a tool result has to follow the request that caused it.</p><p>On the next iteration the model reads the result and decides again. For this question it typically asks for the word length, then for the sum, then answers in text. The <code>range(5)</code> cap is a hard safety limit, because a confused agent can otherwise loop indefinitely and spend money. This version runs calls sequentially and trusts the model's arguments; a production version validates them and may run independent calls in parallel.</p></div>
+
+  <h3>The same idea in LangChain</h3>
+  <p>The framework hides the loop. You list tools and it runs think, act, observe for you.</p>
+  <figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>lc_agent.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">from dotenv import load_dotenv
+from langchain.agents import create_agent
+from langchain_core.tools import tool
+
+load_dotenv()
+
+@tool
+def add(a: float, b: float) -> float:
+    """Add two numbers and return the sum."""
+    return a + b
+
+@tool
+def word_length(word: str) -> int:
+    """Count the letters in a word."""
+    return len(word)
+
+agent = create_agent(
+    model="openai:gpt-4o-mini",
+    tools=[add, word_length],
+    system_prompt="You are a helpful assistant. Use tools for maths and counting.",
+)
+
+result = agent.invoke(
+    {"messages": [{"role": "user", "content": "How many letters in 'extraordinary', plus 10?"}]}
+)
+print(result["messages"][-1].content)</code></pre></figure>
+  <div class="walk"><span class="walk-label">How it works</span><p>The <code>@tool</code> decorator reads the function's name, type hints and docstring and builds the same JSON Schema description that you wrote by hand in the previous example. That is why the docstring is not optional: it is the model's only documentation for the tool.</p><p><code>create_agent</code> assembles the model, the tools and the system prompt into the think, act, observe loop and manages the message history. The model is named as a <code>provider:name</code> string. <code>invoke</code> takes and returns a dictionary with a <code>messages</code> list, so the final answer is the content of the last message. What you gain over the hand-written loop is streaming, retries, structured output and hooks for middleware. What you lose is visibility, so when something goes wrong, remember that underneath it is exactly the loop you wrote above.</p></div>
+  <div class="callout mentor"><span class="tag">Version note</span>
+    <p>Agent helpers have been renamed in past LangChain releases. If <code>create_agent</code> is not found, upgrade with <code>pip install -U langchain</code> or check the docs. For complex flows with branching and saved state, look at LangGraph, the sister library for stateful agents.</p>
+  </div>
+
+  <h3>Agent design patterns</h3>
+  <div class="grid">
+    <div class="card c-blue"><span class="badge">Single agent</span><h4>One model, many tools</h4><p>Start here. Most useful agents are this.</p></div>
+    <div class="card c-red"><span class="badge">Router</span><h4>Pick the right path</h4><p>A first step classifies the request and sends it to a specialised prompt or agent.</p></div>
+    <div class="card c-yellow"><span class="badge">Plan and execute</span><h4>Plan first</h4><p>One call writes a plan, then each step runs separately and is checked.</p></div>
+    <div class="card c-green"><span class="badge">Multi-agent</span><h4>Specialists talk</h4><p>A researcher, a writer, and a reviewer pass work along. Add only when one agent is not enough.</p></div>
+  </div>
+
+  <div class="callout warn"><span class="tag">Agent safety checklist</span>
+    <p>Cap the number of steps. Give tools the least power they need (read-only first). Ask a human to approve anything that sends, pays, deletes or publishes. Log every tool call. Treat tool outputs as untrusted text. An agent that can act is a program with real consequences.</p>
+  </div>
+  <p>Also learn about MCP, the Model Context Protocol. It is an open standard for plugging tools and data sources into AI apps, so one tool server can work with many different assistants.</p>
+
+  <h3>LangGraph: agents as state machines</h3>
+  <p>A single loop is fine for simple tasks. When you need branches, retries, checkpoints or a human approval step, model the workflow explicitly as a graph. LangGraph represents it as nodes (functions that read and update a shared state) connected by edges, some of which are conditional. The example below implements the reflection pattern: write an answer, have a reviewer critique it, and loop back until the reviewer approves or a retry limit is reached.</p>
+<figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>reflection_graph.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">from typing import TypedDict
+from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
+from langgraph.graph import StateGraph, START, END
+
+load_dotenv()
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+
+class State(TypedDict):
+    question: str
+    draft: str
+    verdict: str
+    tries: int
+
+def write(state: State):
+    note = f" Fix this feedback: {state['verdict']}" if state["verdict"] else ""
+    reply = llm.invoke(f"Answer in three sentences: {state['question']}{note}")
+    return {"draft": reply.content, "tries": state["tries"] + 1}
+
+def review(state: State):
+    prompt = ("Check this answer for errors or vagueness. Reply PASS if it is good, "
+              "otherwise give one sentence of feedback.\n\n" + state["draft"])
+    return {"verdict": llm.invoke(prompt).content}
+
+def route(state: State):
+    approved = state["verdict"].strip().upper().startswith("PASS")
+    return "done" if approved or state["tries"] >= 3 else "revise"
+
+graph = StateGraph(State)
+graph.add_node("write", write)
+graph.add_node("review", review)
+graph.add_edge(START, "write")
+graph.add_edge("write", "review")
+graph.add_conditional_edges("review", route, {"done": END, "revise": "write"})
+app = graph.compile()
+
+result = app.invoke({"question": "What is overfitting?", "draft": "", "verdict": "", "tries": 0})
+print(result["draft"])
+print("attempts:", result["tries"])</code></pre></figure>
+<div class="walk"><span class="walk-label">How it works</span><p>The <code>State</code> class is the single source of truth that every node reads and writes. A node is a plain function that receives the state and returns only the keys it wants to update, and LangGraph merges that update into the state. <code>write</code> drafts an answer and counts the attempt, and <code>review</code> asks the model to act as a critic, which often catches errors that the first pass missed.</p><p>The interesting part is <code>route</code>, a conditional edge: it inspects the state and returns a label that the mapping translates into the next node, either the end or back to <code>write</code>. The retry counter is a guardrail, because a reflection loop without a limit can cycle forever. Compared with the earlier hand-written loop, the control flow is now visible and testable as a diagram, and graphs of this kind can be paused for human approval and resumed from a saved checkpoint, which is how long-running agents are made reliable.</p></div>
+  <h3>Designing agents that you can trust</h3>
+  <p>Agents fail in ways ordinary software does not, so design for failure. Give each tool the minimum privilege it needs and prefer read-only tools until an action is proven safe. Validate every tool argument in code, never trusting the model's output, and treat tool results as untrusted text that may contain injected instructions. Put a hard cap on steps, tokens and money per task. Require human approval for irreversible actions such as sending, paying, deleting or publishing.</p>
+  <p>Evaluate agents as you would any system, but measure the trajectory as well as the final answer: did it choose the right tool, with correct arguments, in a reasonable number of steps, at an acceptable cost? Keep a fixed set of tasks with known good outcomes, run them after every prompt, tool or model change, and track success rate, average steps and cost per task over time. When a framework hides the loop, log each tool call yourself so that you can replay failures.</p>
+</section>
+
+<!-- 10 -->
+<section class="chapter c-red" id="firstai">
+  <div class="chapter-head">
+    <div class="num">10</div>
+    <div>
+      <h2>Build your first AI</h2>
+      <p class="lead">A study-buddy chatbot you can run today, in 20 lines. Then five upgrades that turn it into a portfolio project.</p>
+      <ul class="learn"><li>Terminal chatbot</li><li>Web version</li><li>Upgrade ladder</li></ul>
+    </div>
+  </div>
+
+  <h3>Version 1: terminal chatbot with memory</h3>
+  <figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>study_buddy.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
+client = OpenAI()
+MODEL = "gpt-4o-mini"
+
+history = [{
+    "role": "system",
+    "content": "You are Study Buddy, a friendly tutor for computer science students. "
+               "Explain simply, give a small example, then ask one question to check understanding."
+}]
+
+print("Study Buddy is ready. Type 'quit' to exit.")
+
+while True:
+    user_text = input("You: ").strip()
+    if user_text.lower() in {"quit", "exit"}:
+        break
+    if not user_text:
+        continue
+
+    history.append({"role": "user", "content": user_text})
+    response = client.chat.completions.create(model=MODEL, messages=history)
+    reply = response.choices[0].message.content
+    history.append({"role": "assistant", "content": reply})
+
+    print("AI:", reply, "\n")</code></pre></figure>
+  <div class="walk"><span class="walk-label">How it works</span><p>The system message is the product's personality and teaching method, and editing those two sentences changes the whole behaviour. The <code>while True</code> loop reads a line with <code>input</code>, strips whitespace, exits on quit and skips empty lines so that you never pay for a blank call. Each turn appends the user message to <code>history</code>, sends the complete list, and appends the reply, which is the entire memory mechanism.</p><p>The program works, but it has weaknesses that the upgrade ladder below fixes: the history grows without limit, nothing is saved when the program exits, and a network error ends the session.</p></div>
+
+  <h3>Version 2: a web app in one file</h3>
+  <p>Streamlit turns a Python script into a web page. Install with <code>pip install streamlit</code>, save as <code>app.py</code>, and run <code>streamlit run app.py</code>.</p>
+  <figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>app.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">import streamlit as st
+from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
+client = OpenAI()
+
+st.title("Study Buddy")
+
+if "history" not in st.session_state:
+    st.session_state.history = [
+        {"role": "system", "content": "You are a friendly CS tutor. Explain simply with a small example."}
+    ]
+
+for m in st.session_state.history[1:]:
+    st.chat_message(m["role"]).write(m["content"])
+
+if prompt := st.chat_input("Ask anything about computer science"):
+    st.session_state.history.append({"role": "user", "content": prompt})
+    st.chat_message("user").write(prompt)
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini", messages=st.session_state.history
+    )
+    reply = response.choices[0].message.content
+    st.session_state.history.append({"role": "assistant", "content": reply})
+    st.chat_message("assistant").write(reply)</code></pre></figure>
+  <div class="walk"><span class="walk-label">How it works</span><p>Streamlit re-executes the whole script from top to bottom on every interaction, so anything that must survive a rerun lives in <code>st.session_state</code>, a per-user dictionary. The first block creates the history once, the loop redraws earlier messages starting at index 1 to skip the hidden system prompt, and <code>st.chat_input</code> returns the typed text or <code>None</code>.</p><p>The walrus operator <code>:=</code> assigns the value to <code>prompt</code> and tests it in the same expression. After the model replies, both messages are appended to the history so the next rerun draws them. Because every user session has its own <code>session_state</code>, several people can use the app at once without seeing each other's chats.</p></div>
+
+  <h3>The upgrade ladder</h3>
+  <p>Add one rung at a time. Each is a chapter you have already read.</p>
+  <div class="grid">
+    <div class="card c-blue"><span class="badge">Rung 1</span><h4>Save history</h4><p>Write messages to a JSON file so chats survive restarts.</p></div>
+    <div class="card c-red"><span class="badge">Rung 2</span><h4>Stream replies</h4><p>Use the streaming code from chapter 5 for a typing effect.</p></div>
+    <div class="card c-yellow"><span class="badge">Rung 3</span><h4>Add RAG</h4><p>Answer from your own notes or syllabus PDFs (chapter 8).</p></div>
+    <div class="card c-green"><span class="badge">Rung 4</span><h4>Add tools</h4><p>Quiz generator, code runner, or web search as agent tools (chapter 9).</p></div>
+    <div class="card c-blue"><span class="badge">Rung 5</span><h4>Deploy</h4><p>Put it online, add a demo link and a README with screenshots.</p></div>
+  </div>
+</section>
+
+<!-- 11 -->
+<section class="chapter c-green" id="automation">
+  <div class="chapter-head">
+    <div class="num">11</div>
+    <div>
+      <h2>Automated systems</h2>
+      <p class="lead">Automation means the AI work runs without you pressing a button: on a schedule, when a file arrives, or when another app calls it.</p>
+      <ul class="learn"><li>Pipelines</li><li>Scheduling</li><li>Webhooks and APIs</li><li>Reliability</li></ul>
+    </div>
+  </div>
+
+  <h3>Three ways to trigger automation</h3>
+  <div class="grid">
+    <div class="card c-blue"><span class="badge">Time</span><h4>Schedule</h4><p>Run every morning with cron or GitHub Actions.</p></div>
+    <div class="card c-red"><span class="badge">Event</span><h4>Webhook</h4><p>Another app sends a request to your API when something happens, like a new support ticket.</p></div>
+    <div class="card c-yellow"><span class="badge">Watch</span><h4>Folder or inbox</h4><p>A script checks for new files or emails and processes them.</p></div>
+  </div>
+
+  <h3>A daily digest pipeline</h3>
+  <p>The script reads a text file, asks the model to summarise it, and saves a dated Markdown file. Same pattern works for emails, news, tickets or meeting notes.</p>
+  <figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>daily_digest.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">import sys
+import datetime
+import pathlib
+from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
+client = OpenAI()
+
+def summarize(text):
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": "Summarise the text as 5 bullet points, then list 3 action items."},
+            {"role": "user", "content": text},
+        ],
+        temperature=0.2,
+        timeout=60,
+    )
+    return response.choices[0].message.content
+
+def main():
+    source = pathlib.Path(sys.argv[1])
+    text = source.read_text(encoding="utf-8")
+
+    summary = summarize(text)
+
+    out_file = pathlib.Path("digests") / f"{datetime.date.today()}.md"
+    out_file.parent.mkdir(exist_ok=True)
+    out_file.write_text(summary, encoding="utf-8")
+    print("Saved", out_file)
+
+if __name__ == "__main__":
+    main()</code></pre></figure>
+  <div class="walk"><span class="walk-label">How it works</span><p>The script is built to run unattended. Reading the input path from <code>sys.argv[1]</code> keeps the file name out of the code, so the same script serves any source. The <code>timeout=60</code> argument matters more than it looks: without it a stalled network call can hang a scheduled job for hours.</p><p>The output path combines a folder with today's date, which gives one file per day and never overwrites yesterday's result. <code>mkdir(exist_ok=True)</code> makes the first run and every later run behave the same, a property called idempotence that automation should have wherever possible. The <code>if __name__ == "__main__"</code> guard lets other modules import <code>summarize</code> without triggering a run, which makes the function testable.</p></div>
+
+  <h3>Schedule it</h3>
+  <p><b>Option A: cron</b> on a Linux or Mac machine that stays on. The five fields are minute, hour, day, month, weekday. This runs at 8:00 every morning.</p>
+  <figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>crontab -e</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="bash">0 8 * * * cd /home/you/ai-handbook &amp;&amp; .venv/bin/python daily_digest.py news.txt &gt;&gt; run.log 2&gt;&amp;1</code></pre></figure>
+  <p><b>Option B: GitHub Actions</b>, free for small projects and no server needed. Save this as <code>.github/workflows/digest.yml</code> and add your key under repository Settings, Secrets and variables, Actions, named <code>OPENAI_API_KEY</code>.</p>
+  <figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>.github/workflows/digest.yml</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="yaml">name: daily-digest
+on:
+  schedule:
+    - cron: "30 2 * * *"      # 02:30 UTC = 08:00 India time
+  workflow_dispatch:           # adds a manual Run button
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install openai python-dotenv
+      - run: python daily_digest.py news.txt
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}</code></pre></figure>
+  <div class="walk"><span class="walk-label">How it works</span><p>GitHub evaluates schedules in UTC, and India is five and a half hours ahead, so 02:30 UTC fires at 08:00 IST. Adding <code>workflow_dispatch</code> gives you a manual Run button, the fastest way to test a workflow without waiting for the clock.</p><p>The secret is read from the repository's encrypted store through the <code>secrets</code> context and injected as an environment variable for that single step, so the key never appears in the repository or the logs. Scheduled workflows can be delayed during busy periods and are disabled automatically after long inactivity on a repository, so a business-critical job needs monitoring.</p></div>
+
+  <h3>Expose your AI as an API</h3>
+  <p>A webhook endpoint lets other tools call your AI. This one classifies support messages. Install <code>pip install fastapi uvicorn</code>, save as <code>server.py</code>, run <code>uvicorn server:app --reload</code>, and open <code>/docs</code> in your browser for a free test page.</p>
+  <figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>server.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">from dotenv import load_dotenv
+from fastapi import FastAPI
+from pydantic import BaseModel
+from openai import OpenAI
+
+load_dotenv()
+client = OpenAI()
+app = FastAPI()
+
+class Ticket(BaseModel):
+    text: str
+
+@app.post("/classify")
+def classify(ticket: Ticket):
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {"role": "system", "content": "Classify the ticket as BILLING, BUG or QUESTION. Reply with one word."},
+            {"role": "user", "content": ticket.text},
+        ],
+        temperature=0,
+    )
+    return {"category": response.choices[0].message.content.strip()}</code></pre></figure>
+  <div class="walk"><span class="walk-label">How it works</span><p>FastAPI turns type hints into behaviour. The route decorator binds the function to <code>POST /classify</code>. Because the parameter is annotated with the Pydantic class <code>Ticket</code>, FastAPI parses the JSON body, validates it, rejects malformed requests with a clear error, and generates interactive documentation at <code>/docs</code>.</p><p>The returned dictionary is serialised to JSON. This is the shape of most AI backends: a thin, validated web layer around one or more model calls. Before exposing it publicly, add authentication, input length limits and rate limiting, because every request costs you money.</p></div>
+
+  <h3>Make automation trustworthy</h3>
+  <ul class="plain">
+    <li><b>Retries.</b> Networks fail. Retry with a wait that grows (1s, 2s, 4s) and stop after a few tries.</li>
+    <li><b>Logging.</b> Save inputs, outputs, token counts and errors so you can debug at 8 am the next day.</li>
+    <li><b>Budget limits.</b> Set a monthly spend cap in your OpenAI account and a maximum steps value in agents.</li>
+    <li><b>Human approval.</b> Draft emails and actions for review before anything is sent automatically.</li>
+    <li><b>Evals.</b> Keep 20 sample inputs with ideal outputs. Run them after every prompt or model change.</li>
+  </ul>
+</section>
+
+<!-- 12 -->
+<section class="chapter c-red" id="advanced">
+  <div class="chapter-head">
+    <div class="num">12</div>
+    <div>
+      <h2>Production LLM engineering</h2>
+      <p class="lead">The gap between a demo and a product is evaluation, observability, caching, safety and cost control. This chapter covers the practices that senior AI engineers are hired for.</p>
+      <ul class="learn"><li>Evals</li><li>Observability</li><li>Caching</li><li>Fine-tuning and LoRA</li><li>Security</li></ul>
+    </div>
+  </div>
+
+  <h3>The shape of a production request</h3>
+  <p>A reliable LLM feature is a pipeline of small, testable stages around the model call, not a single call.</p>
+  <div class="flow"><span class="c-blue">Input checks</span><i>→</i><span class="c-yellow">Retrieve context</span><i>→</i><span class="c-red">Model call</span><i>→</i><span class="c-green">Validate output</span><i>→</i><span class="c-blue">Log and meter</span></div>
+  <p>Input checks limit length and strip or flag suspicious content. Retrieval supplies the facts. The model call has a timeout and retries. Output validation checks the schema, rejects unsafe or unsupported content and can trigger a repair attempt. Logging records the prompt version, latency, tokens and outcome. Each stage can be tested and improved separately, and each is a place where failures are caught before a user sees them.</p>
+
+  <h3>Evals: tests for non-deterministic software</h3>
+  <p>Prompts are code, and code needs tests. An eval is a fixed set of inputs with expected outcomes that you run on every change. Start with exact-match checks where an answer is a label, then add model-graded checks for open-ended answers.</p>
+<figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>eval_harness.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">import json
+from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
+client = OpenAI()
+MODEL = "gpt-4o-mini"
+
+CASES = [
+    {"input": "I was charged twice this month.", "expected": "BILLING"},
+    {"input": "The app crashes when I tap save.", "expected": "BUG"},
+    {"input": "How do I change my username?", "expected": "QUESTION"},
+    {"input": "Refund me, the invoice is wrong.", "expected": "BILLING"},
+]
+
+def classify(text):
+    response = client.chat.completions.create(
+        model=MODEL, temperature=0,
+        messages=[
+            {"role": "system", "content": "Classify as BILLING, BUG or QUESTION. Reply with one word."},
+            {"role": "user", "content": text},
+        ],
+    )
+    return response.choices[0].message.content.strip().upper()
+
+def judge(question, answer):
+    """Model-graded check for open-ended answers."""
+    prompt = (f"Question: {question}\nAnswer: {answer}\n"
+              "Score the answer from 1 to 5 for correctness and clarity. "
+              "Reply as JSON: {\"score\": 1, \"reason\": \"...\"} using your real score.")
+    response = client.chat.completions.create(
+        model=MODEL, temperature=0,
+        response_format={"type": "json_object"},
+        messages=[{"role": "user", "content": prompt}],
+    )
+    return json.loads(response.choices[0].message.content)
+
+def run_eval():
+    results = []
+    for case in CASES:
+        got = classify(case["input"])
+        results.append({**case, "got": got, "ok": got == case["expected"]})
+    accuracy = sum(r["ok"] for r in results) / len(results)
+    print(f"accuracy: {accuracy:.0%} on {len(results)} cases")
+    for r in results:
+        if not r["ok"]:
+            print("FAIL:", r)
+    return accuracy
+
+if __name__ == "__main__":
+    run_eval()</code></pre></figure>
+<div class="walk"><span class="walk-label">How it works</span><p><code>CASES</code> is the golden set: realistic inputs paired with the answer you consider correct. <code>run_eval</code> runs the real function on each case, records pass or fail, prints the failures so you can read them, and returns one number you can track from commit to commit. Wire it into your continuous integration so that a prompt edit which breaks previously working cases is caught before release. A good set grows from production: whenever a user finds a failure, add that input as a new case.</p><p><code>judge</code> shows the model-graded variant, often called LLM-as-judge, where a second call scores an open-ended answer against a rubric. It scales human review, but it has biases, for example favouring longer answers or its own style, so calibrate it by comparing its scores with a sample of human ratings, use a clear rubric, and prefer pairwise comparisons for close calls.</p></div>
+  <h3>Observability: know what your system did</h3>
+  <p>When a user says the assistant gave a strange answer, you need to reconstruct exactly what happened. Log every call with a request id, the prompt version, model name, latency, input and output token counts, and the result of validation. Mask personal data before storing logs.</p>
+<figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>observability.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">import json
+import logging
+import time
+import uuid
+from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
+logging.basicConfig(level=logging.INFO, format="%(message)s")
+log = logging.getLogger("llm")
+client = OpenAI()
+
+def traced_call(feature, prompt_version, **kwargs):
+    request_id = str(uuid.uuid4())[:8]
+    started = time.perf_counter()
+    try:
+        response = client.chat.completions.create(**kwargs)
+        status = "ok"
+        return response
+    except Exception as error:
+        status = type(error).__name__
+        raise
+    finally:
+        record = {
+            "id": request_id,
+            "feature": feature,
+            "prompt_version": prompt_version,
+            "model": kwargs.get("model"),
+            "ms": round((time.perf_counter() - started) * 1000),
+            "status": status,
+        }
+        log.info(json.dumps(record))
+
+reply = traced_call("greeting", "v1", model="gpt-4o-mini",
+                    messages=[{"role": "user", "content": "Hi!"}])
+print(reply.choices[0].message.content)</code></pre></figure>
+<div class="walk"><span class="walk-label">How it works</span><p>The wrapper records one structured JSON line per call, which any log tool can search and chart. <code>try</code>, <code>except</code> and <code>finally</code> together guarantee that a record is written whether the call succeeds or fails, and the exception is re-raised so callers still see the error. Recording the prompt version lets you compare quality and latency before and after a change, and the request id lets you tie a user complaint to one exact call. Extend the record with token counts from <code>response.usage</code> and your cost per feature becomes a query rather than a surprise. Dedicated tracing tools add a visual timeline of each step in a chain or agent, but the habit of structured logging comes first.</p></div>
+  <h3>Caching and latency</h3>
+  <p>The cheapest call is the one you do not make. Many applications see the same requests repeatedly, such as identical classification inputs or repeated FAQ questions. An exact-match cache keyed on a hash of the model, parameters and messages is simple, safe and effective, and only applies when the output is meant to be repeatable, so use it with temperature 0.</p>
+<figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>cache.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">import hashlib
+import json
+from dotenv import load_dotenv
+from openai import OpenAI
+
+load_dotenv()
+client = OpenAI()
+_cache = {}
+
+def cached_chat(messages, model="gpt-4o-mini"):
+    payload = json.dumps([model, messages], sort_keys=True)
+    key = hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+    if key in _cache:
+        return _cache[key], True
+
+    response = client.chat.completions.create(model=model, messages=messages, temperature=0)
+    answer = response.choices[0].message.content
+    _cache[key] = answer
+    return answer, False
+
+question = [{"role": "user", "content": "Define overfitting in one sentence."}]
+print(cached_chat(question)[1])    # False: first call goes to the API
+print(cached_chat(question)[1])    # True: served from memory</code></pre></figure>
+<div class="walk"><span class="walk-label">How it works</span><p>The key is a SHA-256 hash of the serialised model and messages, with <code>sort_keys=True</code> so that identical content always yields identical text. A hit returns instantly and costs nothing, and the function also reports whether it was a hit, which you should count to measure the saving. In production the dictionary becomes Redis or a database table with an expiry time, so stale answers age out. A semantic cache goes further by matching questions that mean the same thing using embeddings, at the price of occasionally returning an answer to a slightly different question, so set a strict similarity threshold. For latency, also stream responses, run independent calls in parallel, shorten prompts and send easy requests to smaller models.</p></div>
+  <h3>Fine-tuning, LoRA and open models</h3>
+  <p>Before you fine-tune, exhaust the cheaper options. The decision is usually clear once you ask what is missing.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Problem</th><th>Best first tool</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td>Model lacks your private or fresh facts</td><td>RAG</td><td>Facts change; retrieval updates instantly and can cite sources</td></tr>
+      <tr><td>Output format or tone is inconsistent</td><td>Better prompt, examples, structured output</td><td>Cheap and reversible</td></tr>
+      <tr><td>A narrow task needs consistent behaviour at low cost and latency</td><td>Fine-tune a smaller model</td><td>Bakes the pattern in so prompts get shorter</td></tr>
+      <tr><td>Data cannot leave your servers</td><td>Open-weight model on your own hardware</td><td>Full control, but you operate it</td></tr>
+    </tbody></table></div>
+  <p>Full fine-tuning updates every weight and needs large GPUs. LoRA, low-rank adaptation, freezes the original weights and learns a small update expressed as the product of two thin matrices, which can be orders of magnitude smaller than the original matrix. That makes fine-tuning feasible on a single GPU, and the small adapter can be swapped in and out. Combined with 4-bit quantization of the base model, a method known as QLoRA, even large open models become trainable on modest hardware. Open models are run most easily through the Hugging Face libraries.</p>
+<figure class="code"><figcaption><span class="name"><span class="dots"><i></i><i></i><i></i></span>open_model.py</span><button class="copy" type="button">Copy</button></figcaption>
+<pre><code data-lang="python">from transformers import pipeline
+
+generator = pipeline("text-generation", model="Qwen/Qwen2.5-0.5B-Instruct")
+
+result = generator(
+    "Explain overfitting in one sentence.",
+    max_new_tokens=60,
+    do_sample=False,
+)
+print(result[0]["generated_text"])</code></pre></figure>
+<div class="walk"><span class="walk-label">How it works</span><p><code>pip install transformers torch</code> first. The <code>pipeline</code> helper downloads the model weights from the Hugging Face Hub on the first run, loads them, and wraps tokenization and generation into one callable. A half-billion-parameter model is small enough to run on an ordinary laptop CPU, so it is a good way to see how an open model behaves, how fast it is, and how its quality compares with a hosted model. <code>do_sample=False</code> makes the output deterministic by always taking the most likely token, the equivalent of temperature 0. Open models are the route to private deployment, but they shift the operational work, such as serving, scaling, updates and safety, onto you.</p></div>
+  <h3>Security and safety, briefly</h3>
+  <p>Treat the model as an untrusted component. Prompt injection, where text that the model reads contains instructions, cannot be fully prevented by wording, so limit the damage instead: separate untrusted content from instructions, give tools least privilege, require approval for consequential actions, and never place secrets in prompts. Validate outputs before acting on them, filter personal data from logs, and rate-limit users so that one account cannot drain your budget. For systems that reach real users, add moderation checks and keep a record of what the system did and why, because you will be asked.</p>
+</section>
+
+<!-- 13 -->
+<section class="chapter c-yellow" id="career">
+  <div class="chapter-head">
+    <div class="num">13</div>
+    <div>
+      <h2>Career plan</h2>
+      <p class="lead">What employers look for, which projects prove it, and a 12-month path from beginner to hireable.</p>
+      <ul class="learn"><li>Skills checklist</li><li>Portfolio projects</li><li>Interview topics</li></ul>
+    </div>
+  </div>
+
+  <h3>Pick your lane</h3>
+  <div class="grid">
+    <div class="card c-blue"><span class="badge">AI engineer</span><h4>Builds LLM products</h4><p>APIs, RAG, agents, evals, deployment. Strongest software skills. Best fit if you like shipping apps.</p></div>
+    <div class="card c-green"><span class="badge">ML engineer</span><h4>Trains and serves models</h4><p>Data pipelines, training, monitoring, MLOps. More maths and infrastructure.</p></div>
+    <div class="card c-red"><span class="badge">Data scientist</span><h4>Finds insight in data</h4><p>Statistics, experiments, dashboards, modelling.</p></div>
+    <div class="card c-yellow"><span class="badge">Research</span><h4>Invents new methods</h4><p>Deep maths, papers, usually a master's or PhD.</p></div>
+  </div>
+
+  <h3>Skills checklist</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>Area</th><th>What to be able to do</th><th>Chapter</th></tr></thead>
+    <tbody>
+      <tr><td>Python</td><td>Write functions and classes, handle errors, read and write files and JSON, use virtual environments</td><td>1</td></tr>
+      <tr><td>Software basics</td><td>Git and GitHub, testing, reading docs, data structures, SQL</td><td>1, 11</td></tr>
+      <tr><td>ML basics</td><td>Explain train/test split, overfitting, metrics. Train a model with scikit-learn</td><td>3</td></tr>
+      <tr><td>LLM apps</td><td>Call APIs, write prompts, return structured output, stream, count cost</td><td>4, 5, 6</td></tr>
+      <tr><td>RAG</td><td>Chunk, embed, retrieve, answer with sources, test retrieval quality</td><td>8</td></tr>
+      <tr><td>Agents</td><td>Tool calling, loops with limits, safety checks, LangGraph basics</td><td>9</td></tr>
+      <tr><td>Production</td><td>FastAPI, Docker, logging, retries, evals, cost control, deployment</td><td>11</td></tr>
+    </tbody></table></div>
+
+  <h3>Five portfolio projects</h3>
+  <ol class="plain">
+    <li><b>Document Q&amp;A bot.</b> Upload PDFs, ask questions, show sources. Proves RAG.</li>
+    <li><b>Support ticket triage API.</b> Classifies and routes messages, with a test set that reports accuracy. Proves automation and evals.</li>
+    <li><b>Research agent.</b> Takes a topic, searches the web, writes a cited summary. Proves tool use.</li>
+    <li><b>Daily digest automation.</b> Runs on a schedule and delivers a summary to you. Proves reliability.</li>
+    <li><b>A classic ML project.</b> Predict something from a real dataset with a clear metric. Proves fundamentals.</li>
+  </ol>
+  <p>For every project: write a README with a screenshot or short demo video, a clear problem statement, how you tested it, what went wrong, and what it costs to run. That write-up is what recruiters read.</p>
+
+  <h3>A 12-month path</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>Months</th><th>Focus</th><th>Finish line</th></tr></thead>
+    <tbody>
+      <tr><td>1-2</td><td>Python, git, SQL, APIs</td><td>Three small scripts on GitHub</td></tr>
+      <tr><td>3-4</td><td>ML basics, scikit-learn, data cleaning</td><td>One ML project with a written report</td></tr>
+      <tr><td>5-6</td><td>OpenAI API, prompts, LangChain</td><td>Study Buddy deployed online</td></tr>
+      <tr><td>7-8</td><td>RAG and evals</td><td>Document Q&amp;A bot with a test set</td></tr>
+      <tr><td>9-10</td><td>Agents, FastAPI, Docker, automation</td><td>Research agent and scheduled pipeline</td></tr>
+      <tr><td>11-12</td><td>Polish, write, apply, practise interviews</td><td>Portfolio site, applications sent weekly</td></tr>
+    </tbody></table></div>
+
+  <h3>Interview questions to prepare</h3>
+  <ul class="plain">
+    <li>What is a token and why does it matter for cost and context?</li>
+    <li>Explain overfitting and two ways to reduce it.</li>
+    <li>How does RAG reduce hallucination, and how do you test a RAG system?</li>
+    <li>When would you fine-tune instead of using RAG or better prompts?</li>
+    <li>How do you stop an agent from looping forever or taking a harmful action?</li>
+    <li>How would you evaluate whether a prompt change made the app better?</li>
+  </ul>
+
+  <div class="callout mentor"><span class="tag">Honest advice</span>
+    <p>Calling an API is the easy part, and many people can do it. What sets you apart is judgement: measuring quality, handling failures, controlling cost and explaining trade-offs. Build fewer projects and finish them properly. Learn in public by posting what you built and what broke. Study the official docs of OpenAI, LangChain and Hugging Face, and take a well-known machine learning course to cover the maths behind it.</p>
+  </div>
+</section>
+
+<!-- 14 -->
+<section class="chapter c-green" id="google">
+  <div class="chapter-head">
+    <div class="num">14</div>
+    <div>
+      <h2>Road to Google AI and LLM engineer</h2>
+      <p class="lead">Eleven phases, each with every word you must know, a checklist you can tick off, and a finish line that proves you are done.</p>
+      <ul class="learn"><li>Every term explained</li><li>Tick-off checklists</li><li>Finish lines</li></ul>
+    </div>
+  </div>
+
+  <div class="callout mentor"><span class="tag">Honest first</span>
+    <p>Nobody can promise a Google offer. Hiring there is very competitive, and some roles, such as Research Scientist, normally expect a PhD. What you can do is build the skills those teams test: strong coding, data structures, ML and LLM depth, systems thinking and visible projects. Expect two and a half to four years of steady work from a beginner, and treat Google as one target of many. The same skills are valued at other strong companies and labs, and every phase pays off even if you end up elsewhere.</p>
+  </div>
+
+  <h3>What real Google postings ask for</h3>
+  <p>I read current postings so this plan matches reality. The DeepMind Research Engineer posting asks for fluency in Python or C++ and in JAX or a similar framework, experience training or deploying models, and experience building automatic or human evaluations, with hands-on LLM training and debugging as a plus. A Google Cloud machine learning engineering posting lists strong data structures and algorithms, C++ or Rust, and experience with TensorFlow-style model work. A software engineering internship posting asks for penultimate-year students with coding in C, C++, Java, JavaScript or Python, Linux experience, and data structures, algorithms and software design. The Student Researcher posting I read was for enrolled PhD students located in the United States.</p>
+  <p>Two warnings follow from that. First, intern and research programmes differ by year, degree and country, and change every cycle, so always read the live posting on the Google Careers Students page before you plan around it. Second, I could not confirm current STEP details for India, so verify them there yourself. Source postings: <a href="https://job-boards.greenhouse.io/deepmind/jobs/7263484" target="_blank" rel="noopener">DeepMind Research Engineer</a>, <a href="https://www.themuse.com/jobs/google/technical-lead-machine-learning-google-cloud" target="_blank" rel="noopener">Google Cloud ML engineering</a>, <a href="https://www.google.com/about/careers/applications/jobs/results/104489346874122950-software-engineering-intern/" target="_blank" rel="noopener">Software Engineering Intern</a>, <a href="https://google.com/about/careers/applications/jobs/results/134313315235963590-student-researcher" target="_blank" rel="noopener">Student Researcher</a>.</p>
+
+  <h3>The map</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>Phase</th><th>Focus</th><th>When</th><th>Finish line</th></tr></thead>
+    <tbody><tr><td>0</td><td>Know your target</td><td>Week 1</td><td>A gap list of at least 20 skills, each with a self-score.</td></tr><tr><td>1</td><td>Programming foundations</td><td>Months 1 to 4</td><td>Five GitHub projects with a README, tests and a clean commit history.</td></tr><tr><td>2</td><td>Data structures and algorithms</td><td>Months 1 to 18, daily</td><td>You solve a fresh medium problem in 30 to 40 minutes and state its complexity correctly.</td></tr><tr><td>3</td><td>Mathematics for ML</td><td>Months 4 to 9</td><td>Derive and code backpropagation for a two-layer network on paper and in numpy, without notes.</td></tr><tr><td>4</td><td>Classical machine learning</td><td>Months 7 to 12</td><td>A Kaggle notebook with a clean pipeline, cross-validation and written error analysis.</td></tr><tr><td>5</td><td>Deep learning</td><td>Months 10 to 16</td><td>A CIFAR-10 model above 85 percent accuracy, plus your own small autograd engine.</td></tr><tr><td>6</td><td>LLM internals</td><td>Months 14 to 22</td><td>A small GPT you wrote and trained, plus a LoRA fine-tune with measured before and after results.</td></tr><tr><td>7</td><td>LLM applications and the Google stack</td><td>Months 18 to 24</td><td>One deployed LLM app with an eval set, cost and latency numbers, and an honest README.</td></tr><tr><td>8</td><td>ML systems and infrastructure</td><td>Months 20 to 28</td><td>A written design for an LLM serving system with capacity numbers, plus one multi-GPU training run.</td></tr><tr><td>9</td><td>Research and portfolio</td><td>Months 12 to 30, in parallel</td><td>Three merged open-source pull requests and one reproduced paper with a public write-up.</td></tr><tr><td>10</td><td>Interviews and applying</td><td>Start 6 months before each hiring cycle</td><td>You have applied to every programme you qualify for, finished 20 mocks, and are interviewing in several places.</td></tr></tbody></table></div>
+  <p>Phases overlap. Data structures run every day for the whole journey, and open-source work and projects start as soon as you can write useful code. If you already know some phases, test yourself against the finish line and skip ahead.</p>
+  <p class="prog" id="gtotal"></p>
+
+<div class="phase c-blue" id="phase0"><h3>Phase 0: Know your target <span class="time">Week 1</span></h3><p class="goal">Pick a role and read what Google really asks for, so every later hour has a reason.</p><h4>Words you must know</h4><div class="scroll terms"><table><thead><tr><th>Term</th><th>What it means</th></tr></thead><tbody><tr><td>Software Engineer, Machine Learning</td><td>Builds ML features and systems inside Google products. Needs strong coding plus ML knowledge. The most reachable AI role.</td></tr><tr><td>Research Engineer</td><td>Turns research ideas into reliable large-scale training and evaluation code. Real postings ask for Python or C++, JAX and model evaluation.</td></tr><tr><td>Research Scientist</td><td>Invents new methods and publishes them. Usually needs a PhD or an equivalent research record.</td></tr><tr><td>Applied AI or Cloud AI engineer</td><td>Builds AI products and APIs for customers, for example with the Gemini API or Vertex AI.</td></tr><tr><td>Google DeepMind</td><td>Google&#x27;s AI lab that builds frontier models such as Gemini.</td></tr><tr><td>Google Research</td><td>Google&#x27;s research organisation for new ML methods and applications.</td></tr><tr><td>Gemini</td><td>Google&#x27;s family of multimodal large language models.</td></tr><tr><td>Gemma</td><td>Google&#x27;s family of open-weight models that you can download and run yourself.</td></tr><tr><td>Vertex AI</td><td>Google Cloud&#x27;s platform for building, tuning and deploying models.</td></tr><tr><td>TPU</td><td>Tensor Processing Unit, Google&#x27;s custom chip for training and serving neural networks.</td></tr><tr><td>JAX</td><td>Google&#x27;s Python library for fast numerical code with automatic differentiation, compiled for GPUs and TPUs.</td></tr><tr><td>XLA</td><td>Accelerated Linear Algebra, the compiler that makes JAX and TensorFlow programs fast.</td></tr><tr><td>TensorFlow and Keras</td><td>Google&#x27;s older deep learning framework and its friendly high-level interface.</td></tr><tr><td>Hiring committee</td><td>A group that reviews your whole interview packet before an offer, so one weak round is not always fatal.</td></tr></tbody></table></div><h4>Your steps <span class="prog"></span></h4><div class="todo"><label class="chk"><input type="checkbox" data-k="p0-1"><span>Open three real postings on the Google Careers site: one Software Engineer in Machine Learning, one DeepMind Research Engineer, one internship.</span></label><label class="chk"><input type="checkbox" data-k="p0-2"><span>Copy every skill they list into a sheet. This is your gap list.</span></label><label class="chk"><input type="checkbox" data-k="p0-3"><span>Score yourself 0 to 3 on each skill. Be honest, this sheet steers the next two years.</span></label><label class="chk"><input type="checkbox" data-k="p0-4"><span>Write your target role in one sentence and keep it where you study.</span></label><label class="chk"><input type="checkbox" data-k="p0-5"><span>Count backwards from your graduation date to set the pace of the phases below.</span></label></div><p class="proof"><b>Finish line:</b> A gap list of at least 20 skills, each with a self-score.</p></div>
+<div class="phase c-red" id="phase1"><h3>Phase 1: Programming foundations <span class="time">Months 1 to 4</span></h3><p class="goal">Become a fluent programmer who can build, test and ship small tools without help.</p><h4>Words you must know</h4><div class="scroll terms"><table><thead><tr><th>Term</th><th>What it means</th></tr></thead><tbody><tr><td>Variable and type</td><td>A named value and its kind, such as int, str or list.</td></tr><tr><td>Function</td><td>A reusable block of code that takes inputs and returns an output.</td></tr><tr><td>Recursion</td><td>A function that calls itself on a smaller problem until it reaches a stopping case.</td></tr><tr><td>OOP</td><td>Object-oriented programming: organising code as classes that bundle data and behaviour.</td></tr><tr><td>Class and object</td><td>A class is a blueprint. An object is one instance built from it.</td></tr><tr><td>Inheritance</td><td>A class reusing and extending another class.</td></tr><tr><td>Exception handling</td><td>try and except blocks that stop an error from crashing the whole program.</td></tr><tr><td>Iterator and generator</td><td>Objects that produce values one at a time, saving memory on large data.</td></tr><tr><td>Decorator</td><td>A function that wraps another function to add behaviour, such as @tool in LangChain.</td></tr><tr><td>Type hints</td><td>Annotations like x: int that document and check what a function expects.</td></tr><tr><td>Module and package</td><td>A file of code you import, and a folder of such files.</td></tr><tr><td>Virtual environment</td><td>An isolated set of packages for one project.</td></tr><tr><td>Unit test (pytest)</td><td>A small automatic check that a function returns the right result.</td></tr><tr><td>Git</td><td>Version control. Key words: commit (save point), branch (parallel line of work), merge, pull request (a proposal to merge).</td></tr><tr><td>Linux shell</td><td>Command-line tools such as ls, grep, ssh and pipes that chain commands together.</td></tr><tr><td>SQL</td><td>The language for querying relational databases. Key words: SELECT, JOIN, GROUP BY.</td></tr><tr><td>Index (database)</td><td>A lookup structure that makes queries on a column fast.</td></tr><tr><td>HTTP and REST</td><td>How programs talk over the web: requests with verbs like GET and POST, answered with status codes.</td></tr><tr><td>JSON</td><td>Text format of keys and values that nearly every API uses.</td></tr><tr><td>Concurrency</td><td>Doing several things at once: threads, processes or async tasks.</td></tr><tr><td>Pointer and memory (C)</td><td>A pointer holds a memory address. Understanding it explains the stack, the heap and many bugs.</td></tr><tr><td>Compiled vs interpreted</td><td>C++ is translated to machine code before running. Python is executed line by line by an interpreter.</td></tr></tbody></table></div><h4>Your steps <span class="prog"></span></h4><div class="todo"><label class="chk"><input type="checkbox" data-k="p1-1"><span>Finish one complete Python course, then rebuild five tools from scratch: a to-do command line app, a file organiser, an expense tracker, a web scraper and a REST API client.</span></label><label class="chk"><input type="checkbox" data-k="p1-2"><span>Put every project in its own GitHub repository with small, meaningful commits.</span></label><label class="chk"><input type="checkbox" data-k="p1-3"><span>Write pytest tests for at least two projects.</span></label><label class="chk"><input type="checkbox" data-k="p1-4"><span>Use a Linux terminal for a month and learn grep, ssh, pipes and file permissions.</span></label><label class="chk"><input type="checkbox" data-k="p1-5"><span>Learn SQL: build a database, write joins and group-bys, add an index and time the difference.</span></label><label class="chk"><input type="checkbox" data-k="p1-6"><span>Keep C or C++ alive by solving small problems in it, because Google postings list it.</span></label></div><p class="proof"><b>Finish line:</b> Five GitHub projects with a README, tests and a clean commit history.</p></div>
+<div class="phase c-yellow" id="phase2"><h3>Phase 2: Data structures and algorithms <span class="time">Months 1 to 18, daily</span></h3><p class="goal">Solve unseen medium problems under time pressure. This skill decides almost every Google interview, including AI roles.</p><h4>Words you must know</h4><div class="scroll terms"><table><thead><tr><th>Term</th><th>What it means</th></tr></thead><tbody><tr><td>Big-O notation</td><td>How running time or memory grows with input size, such as O(n) or O(n log n).</td></tr><tr><td>Array and string</td><td>Contiguous sequences. Most problems start here.</td></tr><tr><td>Hash map and hash set</td><td>Key lookup in about constant time. The most useful tool in interviews.</td></tr><tr><td>Two pointers</td><td>Two indexes moving through a sequence to avoid a nested loop.</td></tr><tr><td>Sliding window</td><td>A moving range over an array to track a running property.</td></tr><tr><td>Prefix sum</td><td>Precomputed running totals that answer range-sum queries instantly.</td></tr><tr><td>Binary search</td><td>Halving a sorted search space each step, O(log n). Also works on answers, not only arrays.</td></tr><tr><td>Sorting</td><td>Ordering data. Know merge sort, quicksort and when sorting simplifies a problem.</td></tr><tr><td>Stack and queue</td><td>Last-in-first-out and first-in-first-out containers.</td></tr><tr><td>Linked list</td><td>Nodes that point to the next node. Tests pointer thinking.</td></tr><tr><td>Backtracking</td><td>Trying choices recursively and undoing them, for permutations and puzzles.</td></tr><tr><td>Tree and BST</td><td>Hierarchical data. A binary search tree keeps left smaller and right larger.</td></tr><tr><td>Heap or priority queue</td><td>Gives the smallest or largest item fast. Used for top-k problems.</td></tr><tr><td>Trie</td><td>A tree of characters for prefix search.</td></tr><tr><td>Graph</td><td>Nodes and edges. Models maps, networks and dependencies.</td></tr><tr><td>BFS and DFS</td><td>Breadth-first search explores level by level. Depth-first goes deep first.</td></tr><tr><td>Topological sort</td><td>Ordering tasks that depend on each other.</td></tr><tr><td>Dijkstra</td><td>Shortest path in a graph with non-negative weights.</td></tr><tr><td>Union-Find</td><td>Tracks which items belong to the same group, with near-constant updates.</td></tr><tr><td>Greedy</td><td>Taking the best local choice when it provably leads to the best overall answer.</td></tr><tr><td>Dynamic programming</td><td>Solving overlapping subproblems once and reusing results. Memoization or tabulation.</td></tr><tr><td>Bit manipulation</td><td>Operating on binary digits with AND, OR, XOR and shifts.</td></tr><tr><td>Segment tree</td><td>A tree for fast range queries and updates, common in contests.</td></tr></tbody></table></div><h4>Your steps <span class="prog"></span></h4><div class="todo"><label class="chk"><input type="checkbox" data-k="p2-1"><span>Solve 1 to 2 problems every day. Consistency beats weekend marathons.</span></label><label class="chk"><input type="checkbox" data-k="p2-2"><span>Study one pattern at a time, for example two pointers, then do 8 to 10 problems on it before moving on.</span></label><label class="chk"><input type="checkbox" data-k="p2-3"><span>Finish a core set of 150 problems, then continue toward 300 to 500 across all patterns.</span></label><label class="chk"><input type="checkbox" data-k="p2-4"><span>Join a weekly contest on Codeforces or LeetCode and review the problems you missed.</span></label><label class="chk"><input type="checkbox" data-k="p2-5"><span>Keep an error log: one line per failed problem saying what idea you were missing.</span></label><label class="chk"><input type="checkbox" data-k="p2-6"><span>Practise explaining your approach and its time and space cost out loud, and code without autocomplete.</span></label></div><p class="proof"><b>Finish line:</b> You solve a fresh medium problem in 30 to 40 minutes and state its complexity correctly.</p></div>
+<div class="phase c-green" id="phase3"><h3>Phase 3: Mathematics for ML <span class="time">Months 4 to 9</span></h3><p class="goal">Understand the maths well enough to derive how models learn, not only call libraries.</p><h4>Words you must know</h4><div class="scroll terms"><table><thead><tr><th>Term</th><th>What it means</th></tr></thead><tbody><tr><td>Vector</td><td>An ordered list of numbers. A word embedding is a vector.</td></tr><tr><td>Matrix</td><td>A grid of numbers. A neural network layer is mostly a matrix multiplication.</td></tr><tr><td>Dot product</td><td>Multiply two vectors element by element and add. Measures how aligned they are.</td></tr><tr><td>Matrix multiplication</td><td>Combining two matrices. The core operation of deep learning on GPUs.</td></tr><tr><td>Transpose and inverse</td><td>Flip rows and columns. The inverse undoes a matrix when it exists.</td></tr><tr><td>Eigenvalue and eigenvector</td><td>A direction a matrix only stretches, and by how much. Used in PCA.</td></tr><tr><td>SVD</td><td>Singular value decomposition: factors a matrix into simple parts. Behind compression and LoRA intuition.</td></tr><tr><td>Norm</td><td>The size of a vector, such as L1 or L2 length.</td></tr><tr><td>Derivative</td><td>How fast a function changes as its input changes.</td></tr><tr><td>Partial derivative and gradient</td><td>Rate of change with respect to one variable, and the vector of all of them. The gradient points uphill.</td></tr><tr><td>Chain rule</td><td>How to differentiate a function of a function. The basis of backpropagation.</td></tr><tr><td>Jacobian</td><td>The matrix of all first derivatives of a vector function.</td></tr><tr><td>Probability</td><td>A number from 0 to 1 for how likely an event is.</td></tr><tr><td>Random variable and distribution</td><td>A quantity with random outcomes, and the rule giving each outcome a probability.</td></tr><tr><td>Expectation and variance</td><td>The average outcome and how spread out outcomes are.</td></tr><tr><td>Conditional probability and Bayes&#x27; rule</td><td>The chance of A given B, and how to flip it into the chance of B given A.</td></tr><tr><td>Gaussian distribution</td><td>The bell curve. Appears in noise, initialisation and many models.</td></tr><tr><td>Maximum likelihood</td><td>Choosing parameters that make the observed data most probable.</td></tr><tr><td>Entropy and cross-entropy</td><td>Measures of uncertainty and of how badly a predicted distribution matches the truth. The loss for LLMs.</td></tr><tr><td>KL divergence</td><td>How different one distribution is from another.</td></tr><tr><td>Convex function</td><td>A bowl-shaped function with one global minimum, so descent cannot get stuck.</td></tr><tr><td>Stochastic gradient descent</td><td>Gradient descent using a small random batch of data per step.</td></tr></tbody></table></div><h4>Your steps <span class="prog"></span></h4><div class="todo"><label class="chk"><input type="checkbox" data-k="p3-1"><span>Watch 3Blue1Brown&#x27;s Essence of Linear Algebra for intuition, then do practice problems.</span></label><label class="chk"><input type="checkbox" data-k="p3-2"><span>Work through the free book Mathematics for Machine Learning, a chapter at a time.</span></label><label class="chk"><input type="checkbox" data-k="p3-3"><span>Re-implement vector and matrix operations in numpy and check against numpy&#x27;s own functions.</span></label><label class="chk"><input type="checkbox" data-k="p3-4"><span>Derive by hand the gradient of mean squared error and of softmax with cross-entropy.</span></label><label class="chk"><input type="checkbox" data-k="p3-5"><span>Solve 50 probability problems and implement a Naive Bayes classifier from scratch.</span></label><label class="chk"><input type="checkbox" data-k="p3-6"><span>Keep a one-page formula notebook that you update as you learn.</span></label></div><p class="proof"><b>Finish line:</b> Derive and code backpropagation for a two-layer network on paper and in numpy, without notes.</p></div>
+<div class="phase c-blue" id="phase4"><h3>Phase 4: Classical machine learning <span class="time">Months 7 to 12</span></h3><p class="goal">Learn the full workflow of data, model, evaluation and error analysis on real datasets.</p><h4>Words you must know</h4><div class="scroll terms"><table><thead><tr><th>Term</th><th>What it means</th></tr></thead><tbody><tr><td>Regression and classification</td><td>Predicting a number, and predicting a category.</td></tr><tr><td>Linear and logistic regression</td><td>The simplest models. Logistic regression predicts probabilities for classes.</td></tr><tr><td>Regularization (L1, L2)</td><td>A penalty on large weights that reduces overfitting. L1 can zero weights out.</td></tr><tr><td>Bias-variance trade-off</td><td>Simple models underfit (bias). Complex ones memorise noise (variance). You want the balance.</td></tr><tr><td>Overfitting and underfitting</td><td>Memorising training data, and failing to learn even the training data.</td></tr><tr><td>Decision tree</td><td>A flowchart of yes or no questions on features.</td></tr><tr><td>Random forest</td><td>Many trees voting together, which cuts variance.</td></tr><tr><td>Gradient boosting (XGBoost)</td><td>Trees added one at a time, each fixing the previous errors. A strong baseline on tables.</td></tr><tr><td>SVM</td><td>Support vector machine: finds the widest margin between classes.</td></tr><tr><td>k-means</td><td>Groups points into k clusters around centres.</td></tr><tr><td>PCA</td><td>Principal component analysis: compresses many features into a few that keep most variation.</td></tr><tr><td>Feature engineering</td><td>Creating more useful input columns from raw data.</td></tr><tr><td>Cross-validation</td><td>Testing on several train and test splits to measure variance.</td></tr><tr><td>Confusion matrix</td><td>A table of correct and wrong predictions per class.</td></tr><tr><td>Precision, recall, F1</td><td>Share of positive predictions that were right, share of positives found, and their balance.</td></tr><tr><td>ROC-AUC</td><td>How well a model ranks positives above negatives across all thresholds.</td></tr><tr><td>Hyperparameter tuning</td><td>Searching settings such as depth or learning rate that are not learned from data.</td></tr><tr><td>Pipeline</td><td>Preprocessing and model chained so the same steps run in training and in production.</td></tr><tr><td>Data leakage</td><td>Test information sneaking into training, which inflates scores.</td></tr><tr><td>Class imbalance</td><td>Rare classes that fool accuracy. Use F1, class weights or resampling.</td></tr></tbody></table></div><h4>Your steps <span class="prog"></span></h4><div class="todo"><label class="chk"><input type="checkbox" data-k="p4-1"><span>Take the Machine Learning Specialization by Andrew Ng, or read Stanford CS229 notes.</span></label><label class="chk"><input type="checkbox" data-k="p4-2"><span>Implement linear regression, logistic regression and k-means from scratch in numpy.</span></label><label class="chk"><input type="checkbox" data-k="p4-3"><span>Run scikit-learn on five different datasets and write down what worked and why.</span></label><label class="chk"><input type="checkbox" data-k="p4-4"><span>Enter two Kaggle competitions and submit a score to each.</span></label><label class="chk"><input type="checkbox" data-k="p4-5"><span>For one project, write a short error analysis: which examples fail and what is common to them.</span></label></div><p class="proof"><b>Finish line:</b> A Kaggle notebook with a clean pipeline, cross-validation and written error analysis.</p></div>
+<div class="phase c-red" id="phase5"><h3>Phase 5: Deep learning <span class="time">Months 10 to 16</span></h3><p class="goal">Train neural networks yourself and know how to debug them when they fail.</p><h4>Words you must know</h4><div class="scroll terms"><table><thead><tr><th>Term</th><th>What it means</th></tr></thead><tbody><tr><td>Tensor</td><td>A multi-dimensional array, the basic data type of deep learning.</td></tr><tr><td>Autograd</td><td>Automatic differentiation: the framework computes gradients for you.</td></tr><tr><td>Neuron and layer</td><td>A weighted sum plus a non-linearity, and a group of them.</td></tr><tr><td>Activation function (ReLU)</td><td>The non-linear step in a neuron. ReLU outputs max(0, x).</td></tr><tr><td>Softmax</td><td>Turns scores into probabilities that sum to one.</td></tr><tr><td>Loss function</td><td>A number measuring how wrong the model is.</td></tr><tr><td>Optimizer (SGD, Adam)</td><td>The rule that updates weights from gradients. Adam adapts the step per weight.</td></tr><tr><td>Learning rate schedule</td><td>Changing the step size during training, often warm-up then decay.</td></tr><tr><td>Batch and epoch</td><td>A group of examples per step, and one full pass over the data.</td></tr><tr><td>Weight initialisation</td><td>Choosing starting weights so signals neither vanish nor explode.</td></tr><tr><td>Batch norm and layer norm</td><td>Rescaling activations to make training stable.</td></tr><tr><td>Dropout and weight decay</td><td>Regularisation: randomly switch off units, and shrink weights.</td></tr><tr><td>CNN</td><td>Convolutional neural network, built for images.</td></tr><tr><td>RNN and LSTM</td><td>Networks that process sequences step by step. Replaced largely by transformers.</td></tr><tr><td>Embedding</td><td>A learned vector for each token or item.</td></tr><tr><td>Residual connection</td><td>Adding a layer&#x27;s input to its output so deep networks train.</td></tr><tr><td>GPU</td><td>Graphics processor that does thousands of multiplications in parallel.</td></tr><tr><td>Mixed precision</td><td>Using 16-bit numbers where safe for speed and memory.</td></tr><tr><td>Checkpoint</td><td>A saved copy of the model and optimiser so training can resume.</td></tr><tr><td>Overfit one batch</td><td>A debug trick: a correct model must reach near-zero loss on one tiny batch.</td></tr><tr><td>PyTorch</td><td>The most popular deep learning framework in research and industry.</td></tr><tr><td>JAX and Flax</td><td>Google&#x27;s functional framework. Key ideas: jit (compile), grad (differentiate), vmap (vectorise).</td></tr></tbody></table></div><h4>Your steps <span class="prog"></span></h4><div class="todo"><label class="chk"><input type="checkbox" data-k="p5-1"><span>Complete Practical Deep Learning for Coders (fast.ai) part 1.</span></label><label class="chk"><input type="checkbox" data-k="p5-2"><span>Watch Andrej Karpathy&#x27;s Neural Networks: Zero to Hero and code along, including a tiny autograd engine.</span></label><label class="chk"><input type="checkbox" data-k="p5-3"><span>Train a CNN on CIFAR-10 in PyTorch and plot the training and validation curves.</span></label><label class="chk"><input type="checkbox" data-k="p5-4"><span>Practise debugging: overfit one batch, check shapes, check the learning rate, check the data.</span></label><label class="chk"><input type="checkbox" data-k="p5-5"><span>Learn JAX basics: jit, grad and vmap, and rewrite one earlier model in JAX.</span></label><label class="chk"><input type="checkbox" data-k="p5-6"><span>Learn to use a GPU on a free or cheap cloud notebook.</span></label></div><p class="proof"><b>Finish line:</b> A CIFAR-10 model above 85 percent accuracy, plus your own small autograd engine.</p></div>
+<div class="phase c-yellow" id="phase6"><h3>Phase 6: LLM internals <span class="time">Months 14 to 22</span></h3><p class="goal">Understand exactly how a language model is built, trained, tuned and served. This is what separates LLM engineers from API users.</p><h4>Words you must know</h4><div class="scroll terms"><table><thead><tr><th>Term</th><th>What it means</th></tr></thead><tbody><tr><td>Tokenizer and BPE</td><td>Splits text into tokens with byte-pair encoding, merging frequent pairs.</td></tr><tr><td>Embedding matrix</td><td>The table mapping each token id to a vector.</td></tr><tr><td>Positional encoding and RoPE</td><td>Tells the model word order. RoPE, rotary embeddings, rotates vectors by position.</td></tr><tr><td>Self-attention</td><td>Each token weighs every other token to build its meaning.</td></tr><tr><td>Multi-head attention</td><td>Several attention operations in parallel that learn different relations.</td></tr><tr><td>MQA and GQA</td><td>Multi-query and grouped-query attention share keys and values to shrink the KV cache.</td></tr><tr><td>Causal mask</td><td>Blocks attention to future tokens so the model predicts the next token fairly.</td></tr><tr><td>Feed-forward network</td><td>The per-token layer after attention, holding much of the model&#x27;s parameters.</td></tr><tr><td>Residual stream</td><td>The running vector that each layer reads from and adds to.</td></tr><tr><td>RMSNorm</td><td>A cheaper normalisation used in many modern LLMs.</td></tr><tr><td>Decoder-only transformer</td><td>The architecture of GPT-style and most chat models.</td></tr><tr><td>Pre-training</td><td>Learning from huge text by predicting the next token.</td></tr><tr><td>Perplexity</td><td>A measure of how surprised the model is by text. Lower is better.</td></tr><tr><td>Scaling laws</td><td>Empirical rules linking loss to model size, data and compute.</td></tr><tr><td>Mixture of experts</td><td>Many expert sub-networks with a router that uses only a few per token.</td></tr><tr><td>FlashAttention</td><td>A memory-efficient way to compute attention that is much faster on GPUs.</td></tr><tr><td>KV cache</td><td>Stored keys and values of past tokens that make generation fast.</td></tr><tr><td>Speculative decoding</td><td>A small model drafts tokens and a large one verifies them to speed generation.</td></tr><tr><td>Quantization</td><td>Storing weights in fewer bits to cut memory and cost.</td></tr><tr><td>Distillation</td><td>Training a small model to imitate a large one.</td></tr><tr><td>SFT</td><td>Supervised fine-tuning on instruction and answer pairs.</td></tr><tr><td>RLHF and reward model</td><td>Tuning with human preferences, using a model that scores answers.</td></tr><tr><td>DPO</td><td>Direct preference optimisation: learns from preference pairs without a separate reward model.</td></tr><tr><td>LoRA and QLoRA</td><td>Training small low-rank adapters instead of all weights, optionally on a 4-bit base model.</td></tr><tr><td>Chain-of-thought and reasoning models</td><td>Prompting or training models to work step by step before answering.</td></tr><tr><td>Benchmark and contamination</td><td>A standard test set, and the problem of test questions leaking into training data.</td></tr><tr><td>Alignment and red teaming</td><td>Making models behave safely, and attacking them deliberately to find failures.</td></tr><tr><td>Multimodal model</td><td>A model that handles text, images, audio or video.</td></tr></tbody></table></div><h4>Ten papers to read, in this order</h4><div class="scroll terms"><table><thead><tr><th>Paper</th><th>Why it matters</th></tr></thead><tbody><tr><td>Attention Is All You Need</td><td>Introduced the transformer.</td></tr><tr><td>BERT</td><td>Showed how pre-training an encoder transfers to many language tasks.</td></tr><tr><td>Language Models are Few-Shot Learners (GPT-3)</td><td>Showed that scale gives in-context learning.</td></tr><tr><td>Scaling Laws for Neural Language Models</td><td>Predictable gains from more parameters, data and compute.</td></tr><tr><td>Training Compute-Optimal Large Language Models (Chinchilla)</td><td>Shows how to balance model size against training data.</td></tr><tr><td>Training language models to follow instructions with human feedback (InstructGPT)</td><td>The RLHF recipe for assistants.</td></tr><tr><td>LoRA: Low-Rank Adaptation of Large Language Models</td><td>Cheap fine-tuning with small adapters.</td></tr><tr><td>FlashAttention</td><td>Fast, memory-efficient exact attention.</td></tr><tr><td>Direct Preference Optimization</td><td>Preference tuning without a separate reward model.</td></tr><tr><td>The Gemini technical reports</td><td>How Google describes the design and evaluation of its models.</td></tr></tbody></table></div><h4>Your steps <span class="prog"></span></h4><div class="todo"><label class="chk"><input type="checkbox" data-k="p6-1"><span>Read Attention Is All You Need slowly, and re-derive the attention formula yourself.</span></label><label class="chk"><input type="checkbox" data-k="p6-2"><span>Watch Karpathy&#x27;s Let&#x27;s build GPT and write a small GPT that trains on a text file.</span></label><label class="chk"><input type="checkbox" data-k="p6-3"><span>Implement a byte-pair-encoding tokenizer from scratch.</span></label><label class="chk"><input type="checkbox" data-k="p6-4"><span>Add a KV cache to your small GPT and measure the speed-up.</span></label><label class="chk"><input type="checkbox" data-k="p6-5"><span>Fine-tune a small open model with LoRA on a task of your choice using Hugging Face, and report before and after scores.</span></label><label class="chk"><input type="checkbox" data-k="p6-6"><span>Read one paper from the list below every two weeks and write a one-page summary of each.</span></label></div><p class="proof"><b>Finish line:</b> A small GPT you wrote and trained, plus a LoRA fine-tune with measured before and after results.</p></div>
+<div class="phase c-green" id="phase7"><h3>Phase 7: LLM applications and the Google stack <span class="time">Months 18 to 24</span></h3><p class="goal">Build and deploy real LLM products using the tools Google teams use, with proper evaluation.</p><h4>Words you must know</h4><div class="scroll terms"><table><thead><tr><th>Term</th><th>What it means</th></tr></thead><tbody><tr><td>Gemini API</td><td>Google&#x27;s developer API for calling Gemini models.</td></tr><tr><td>Google AI Studio</td><td>A web tool for trying Gemini prompts and getting an API key.</td></tr><tr><td>Vertex AI</td><td>Google Cloud&#x27;s managed platform for model access, tuning, deployment and monitoring.</td></tr><tr><td>Function calling</td><td>The model asks your code to run a tool, then uses the result.</td></tr><tr><td>Grounding</td><td>Tying answers to trusted sources, such as search results or your documents.</td></tr><tr><td>RAG</td><td>Retrieve relevant text first, then answer from it.</td></tr><tr><td>Vector search</td><td>Finding the nearest embeddings quickly in a large collection.</td></tr><tr><td>Agent Development Kit (ADK)</td><td>Google&#x27;s open-source toolkit for building and evaluating agents.</td></tr><tr><td>MCP</td><td>Model Context Protocol, an open standard for connecting tools and data to AI apps.</td></tr><tr><td>Eval set</td><td>Fixed test cases that you rerun after every change.</td></tr><tr><td>LLM-as-judge</td><td>A model grading another model&#x27;s output against a rubric.</td></tr><tr><td>Guardrails</td><td>Checks that limit what a model may say or do.</td></tr><tr><td>Docker container</td><td>A packaged app with everything it needs, runnable anywhere.</td></tr><tr><td>Cloud Run</td><td>Google Cloud service that runs a container and scales it automatically.</td></tr><tr><td>Latency and throughput</td><td>How long one request takes, and how many you can serve per second.</td></tr><tr><td>Cost per request</td><td>Tokens used times price. Track it per feature.</td></tr></tbody></table></div><h4>Your steps <span class="prog"></span></h4><div class="todo"><label class="chk"><input type="checkbox" data-k="p7-1"><span>Finish chapters 5 to 12 of this book and repeat the main examples with the Gemini API.</span></label><label class="chk"><input type="checkbox" data-k="p7-2"><span>Build project one: a document question-answering app with an eval set and a retrieval hit-rate score.</span></label><label class="chk"><input type="checkbox" data-k="p7-3"><span>Build project two: a tool-using agent with step limits, input validation and human approval for risky actions.</span></label><label class="chk"><input type="checkbox" data-k="p7-4"><span>Build project three: a service that wraps a model behind an API, with logging of latency, tokens and errors.</span></label><label class="chk"><input type="checkbox" data-k="p7-5"><span>Package one project in Docker and deploy it on Cloud Run or another cloud, with a public demo link.</span></label><label class="chk"><input type="checkbox" data-k="p7-6"><span>Write a README for each project: problem, design, test results, cost, what failed and what you learned.</span></label></div><p class="proof"><b>Finish line:</b> One deployed LLM app with an eval set, cost and latency numbers, and an honest README.</p></div>
+<div class="phase c-blue" id="phase8"><h3>Phase 8: ML systems and infrastructure <span class="time">Months 20 to 28</span></h3><p class="goal">Learn what it takes to train and serve models at scale. This is the skill that most distinguishes strong candidates.</p><h4>Words you must know</h4><div class="scroll terms"><table><thead><tr><th>Term</th><th>What it means</th></tr></thead><tbody><tr><td>Distributed training</td><td>Training one model across many accelerators.</td></tr><tr><td>Data parallelism</td><td>Each device holds a full model copy and processes different data.</td></tr><tr><td>Tensor and model parallelism</td><td>Splitting a model&#x27;s layers or matrices across devices when it does not fit on one.</td></tr><tr><td>Pipeline parallelism</td><td>Different devices run different layers in sequence, with micro-batches kept flowing.</td></tr><tr><td>FSDP and ZeRO</td><td>Sharding weights, gradients and optimiser state across devices to save memory.</td></tr><tr><td>Gradient accumulation</td><td>Summing gradients over several small batches to mimic a large batch.</td></tr><tr><td>Throughput and latency</td><td>Work done per second, and delay for one request.</td></tr><tr><td>Batching</td><td>Grouping requests so the GPU stays busy.</td></tr><tr><td>Model serving</td><td>Running a model behind an API with scaling and monitoring.</td></tr><tr><td>Data pipeline</td><td>Automated steps that collect, clean and version training data.</td></tr><tr><td>Feature store</td><td>A shared place for computed features, used in training and serving.</td></tr><tr><td>Data drift</td><td>Real-world data changing so a model slowly gets worse.</td></tr><tr><td>Experiment tracking</td><td>Recording settings, code version and results for every run.</td></tr><tr><td>CI/CD</td><td>Automatic testing and deployment on every code change.</td></tr><tr><td>Kubernetes</td><td>A system that runs and scales many containers across machines.</td></tr><tr><td>Observability</td><td>Logs, metrics and traces that explain what a system did.</td></tr><tr><td>A/B test and canary release</td><td>Comparing versions on live users, and rolling out to a few users first.</td></tr><tr><td>Reproducibility</td><td>Getting the same result again from the same code, data and seed.</td></tr><tr><td>System design</td><td>Drawing the components, data flow and trade-offs of a large system.</td></tr></tbody></table></div><h4>Your steps <span class="prog"></span></h4><div class="todo"><label class="chk"><input type="checkbox" data-k="p8-1"><span>Learn Docker well and the basics of Kubernetes.</span></label><label class="chk"><input type="checkbox" data-k="p8-2"><span>Read Designing Machine Learning Systems by Chip Huyen and Designing Data-Intensive Applications by Martin Kleppmann.</span></label><label class="chk"><input type="checkbox" data-k="p8-3"><span>Train a model on two or more GPUs with PyTorch distributed data parallel, using cloud credits.</span></label><label class="chk"><input type="checkbox" data-k="p8-4"><span>Track every experiment with a tool such as Weights and Biases or MLflow.</span></label><label class="chk"><input type="checkbox" data-k="p8-5"><span>On paper, design an LLM chat service and a recommendation system: components, latency budget, failure cases, cost.</span></label><label class="chk"><input type="checkbox" data-k="p8-6"><span>Practise system design out loud with a friend for at least 10 sessions.</span></label></div><p class="proof"><b>Finish line:</b> A written design for an LLM serving system with capacity numbers, plus one multi-GPU training run.</p></div>
+<div class="phase c-red" id="phase9"><h3>Phase 9: Research and portfolio <span class="time">Months 12 to 30, in parallel</span></h3><p class="goal">Show evidence that you can learn, build and finish things at a high level.</p><h4>Words you must know</h4><div class="scroll terms"><table><thead><tr><th>Term</th><th>What it means</th></tr></thead><tbody><tr><td>arXiv</td><td>The free website where ML papers are posted before and after publication.</td></tr><tr><td>Reproduction</td><td>Re-running a paper&#x27;s method yourself to see if you get its numbers.</td></tr><tr><td>Baseline</td><td>A simple method that new work must beat.</td></tr><tr><td>Ablation study</td><td>Removing one component at a time to see what really matters.</td></tr><tr><td>Open-source contribution</td><td>Code you add to a public project through a pull request.</td></tr><tr><td>Google Summer of Code</td><td>A summer programme where students work on open-source projects with mentors. Check current eligibility.</td></tr><tr><td>Kaggle medal</td><td>Public recognition for ranking well in a data competition.</td></tr><tr><td>Technical blog</td><td>Posts that explain what you built or learned. Proof of understanding.</td></tr><tr><td>Research internship</td><td>A short project with a lab or professor, often the route to a letter and a paper.</td></tr><tr><td>Workshop paper</td><td>A shorter paper at a conference workshop, a realistic first publication.</td></tr><tr><td>Recommendation letter</td><td>A reference from a professor or mentor who has watched you work.</td></tr></tbody></table></div><h4>Your steps <span class="prog"></span></h4><div class="todo"><label class="chk"><input type="checkbox" data-k="p9-1"><span>Reproduce one paper end to end and write down your ablations and what did not match.</span></label><label class="chk"><input type="checkbox" data-k="p9-2"><span>Make three merged pull requests to an ML open-source project such as Hugging Face, scikit-learn, JAX or PyTorch. Start with documentation and small bug fixes.</span></label><label class="chk"><input type="checkbox" data-k="p9-3"><span>Email professors and researchers with a specific question or a small project idea, and attach your work.</span></label><label class="chk"><input type="checkbox" data-k="p9-4"><span>Publish one blog post a month on something you built.</span></label><label class="chk"><input type="checkbox" data-k="p9-5"><span>Pin your best four repositories on GitHub with clear READMEs and demo links.</span></label><label class="chk"><input type="checkbox" data-k="p9-6"><span>Apply to Google Summer of Code and similar programmes when you are eligible.</span></label></div><p class="proof"><b>Finish line:</b> Three merged open-source pull requests and one reproduced paper with a public write-up.</p></div>
+<div class="phase c-yellow" id="phase10"><h3>Phase 10: Interviews and applying <span class="time">Start 6 months before each hiring cycle</span></h3><p class="goal">Convert your skills into offers, and keep applying to many places, not only one company.</p><h4>Words you must know</h4><div class="scroll terms"><table><thead><tr><th>Term</th><th>What it means</th></tr></thead><tbody><tr><td>Google Careers portal</td><td>The official site for roles and internships. Always check the posting for current eligibility.</td></tr><tr><td>STEP</td><td>Student Training in Engineering Program, Google&#x27;s internship for early-year undergraduates. Check the Students page for current regions and dates.</td></tr><tr><td>Software Engineering Intern</td><td>A summer internship. Postings I read asked for penultimate-year students with strong data structures and algorithms.</td></tr><tr><td>Student Researcher</td><td>A research programme. The posting I read was for PhD students located in the United States.</td></tr><tr><td>New-grad SWE</td><td>An entry full-time engineering role after your degree.</td></tr><tr><td>Referral</td><td>An employee vouching for you. It can help your application get seen but does not replace the interview.</td></tr><tr><td>Resume</td><td>One page, results first: numbers, scale and outcomes instead of duties.</td></tr><tr><td>Recruiter screen</td><td>A first call about your background and the role.</td></tr><tr><td>Technical phone screen</td><td>A live coding interview over video, usually data structures and algorithms.</td></tr><tr><td>Interview loop</td><td>A set of back-to-back interviews: coding, design and behavioural rounds.</td></tr><tr><td>ML design round</td><td>Designing an ML system or experiment: data, model, metrics, risks.</td></tr><tr><td>Behavioural round</td><td>Stories about teamwork, conflict, failure and leadership.</td></tr><tr><td>Hiring committee and team match</td><td>Reviewers decide the hire, then you talk to teams to find a fit.</td></tr><tr><td>Offer and level</td><td>The job title and seniority band attached to your offer.</td></tr></tbody></table></div><h4>Your steps <span class="prog"></span></h4><div class="todo"><label class="chk"><input type="checkbox" data-k="p10-1"><span>Open Google&#x27;s Students page and check which programmes are open to you and their dates.</span></label><label class="chk"><input type="checkbox" data-k="p10-2"><span>Apply to every programme you qualify for, every cycle. A rejection is data, not a verdict.</span></label><label class="chk"><input type="checkbox" data-k="p10-3"><span>Write a one-page resume where every line has a number or an outcome.</span></label><label class="chk"><input type="checkbox" data-k="p10-4"><span>Ask for referrals from seniors, open-source maintainers and mentors, with your work attached.</span></label><label class="chk"><input type="checkbox" data-k="p10-5"><span>Do at least 20 mock interviews, including 5 ML design and 5 system design sessions.</span></label><label class="chk"><input type="checkbox" data-k="p10-6"><span>Prepare six behavioural stories in a structure of situation, action and result.</span></label><label class="chk"><input type="checkbox" data-k="p10-7"><span>Interview widely, at startups and other large companies too, so you practise and have choices.</span></label></div><p class="proof"><b>Finish line:</b> You have applied to every programme you qualify for, finished 20 mocks, and are interviewing in several places.</p></div>
+
+  <div class="callout tip"><span class="tag">How to use this chapter</span>
+    <p>Work one phase at a time but keep data structures going daily. Tick each step only when you have produced something you can show. Your ticks are saved in this browser only. If a term feels fuzzy, search the glossary in chapter 2 or ask Claude to explain it with an example.</p>
+  </div>
+</section>
+
+<!-- 15 -->
+<section class="chapter c-blue" id="cheatsheet">
+  <div class="chapter-head">
+    <div class="num">15</div>
+    <div>
+      <h2>Cheat sheet</h2>
+      <p class="lead">Quick reference for the commands, patterns and errors you will meet most.</p>
+      <ul class="learn"><li>Patterns</li><li>Common errors</li></ul>
+    </div>
+  </div>
+
+  <h3>Pattern picker</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>You want to...</th><th>Use</th></tr></thead>
+    <tbody>
+      <tr><td>Get one answer from a model</td><td>A single chat call (chapter 5)</td></tr>
+      <tr><td>Get data your code can use</td><td>JSON mode or <code>with_structured_output</code></td></tr>
+      <tr><td>Answer from your own documents</td><td>RAG (chapter 8)</td></tr>
+      <tr><td>Let the model do things</td><td>Tool calling inside an agent loop (chapter 9)</td></tr>
+      <tr><td>Change tone or format</td><td>Better system prompt and examples first, fine-tuning last</td></tr>
+      <tr><td>Run on a schedule</td><td>cron or GitHub Actions (chapter 11)</td></tr>
+      <tr><td>Let other apps call your AI</td><td>FastAPI endpoint</td></tr>
+    </tbody></table></div>
+
+  <h3>Common errors and fixes</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>Error</th><th>Likely cause</th><th>Fix</th></tr></thead>
+    <tbody>
+      <tr><td><code>AuthenticationError</code></td><td>Missing or wrong API key</td><td>Check <code>.env</code>, run <code>load_dotenv()</code> first, create a new key if needed</td></tr>
+      <tr><td><code>RateLimitError</code></td><td>Too many requests, or no credit left</td><td>Check billing balance, add retries with waiting</td></tr>
+      <tr><td><code>model_not_found</code></td><td>Model name retired or not available to you</td><td>Pick a current name from the models page</td></tr>
+      <tr><td>Context length exceeded</td><td>Prompt plus history is too long</td><td>Trim history, summarise, or retrieve fewer chunks</td></tr>
+      <tr><td><code>ModuleNotFoundError</code></td><td>Package missing or wrong environment</td><td>Activate <code>.venv</code> then <code>pip install</code> the package</td></tr>
+      <tr><td><code>JSONDecodeError</code></td><td>Model returned text that is not valid JSON</td><td>Use JSON mode or structured output and catch the error</td></tr>
+      <tr><td>Agent repeats the same step</td><td>Vague tool descriptions or no step cap</td><td>Improve descriptions, keep the loop limit</td></tr>
+    </tbody></table></div>
+
+  <h3>Where to keep learning</h3>
+  <ul class="plain">
+    <li>OpenAI developer documentation and cookbook examples</li>
+    <li>LangChain and LangGraph documentation</li>
+    <li>Hugging Face courses for open models and transformers</li>
+    <li>fast.ai practical deep learning course</li>
+    <li>Andrew Ng's machine learning courses for the foundations</li>
+  </ul>
+</section>
+
+<div class="foot">APIs, model names and library versions change quickly. When a snippet breaks, read the current docs for the exact version you installed, and fix one thing at a time.</div>
+</main>
+</div>
+
+<script>
+(function(){
+  /* ---------- glossary ---------- */
+  var CATS={basics:["Basics","c-green"],llm:["LLM","c-yellow"],build:["Build","c-blue"],agents:["Agents","c-red"]};
+  var G=[
+  ["Artificial Intelligence (AI)","basics","Software that performs tasks that normally need human intelligence, such as understanding language, recognising images or making decisions.","A spam filter, a voice assistant."],
+  ["Machine Learning (ML)","basics","A way to build AI where the computer learns patterns from data instead of following rules a person wrote.","Predicting house prices from past sales."],
+  ["Deep Learning","basics","Machine learning with neural networks that have many layers. It powers image, speech and language models.","Face unlock on a phone."],
+  ["Neural network","basics","Layers of small maths units. Connection strengths between them, called weights, are tuned during training.","The network inside every LLM."],
+  ["Model","basics","The result of training: a file of numbers (weights) that turns an input into an output.","gpt-4o-mini, a scikit-learn RandomForest."],
+  ["Training","basics","The process of adjusting a model's weights so its predictions improve on example data.","model.fit(X_train, y_train)"],
+  ["Inference","basics","Using a trained model to produce an answer for new input. Every API call to an LLM is inference.","model.predict(X_test)"],
+  ["Dataset","basics","The collection of examples used to train and test a model.","10,000 labelled emails."],
+  ["Feature and label","basics","A feature is an input value. A label is the correct answer you want the model to predict.","Features: size, rooms. Label: price."],
+  ["Supervised learning","basics","Learning from examples that include the correct answers.","Classifying emails as spam or not."],
+  ["Unsupervised learning","basics","Finding structure in data that has no labels.","Grouping customers by behaviour."],
+  ["Overfitting","basics","When a model memorises training data and performs badly on new data.","99% on training, 60% on test."],
+  ["Loss","basics","A number that measures how wrong a model is. Training tries to make it smaller.","Mean squared error."],
+  ["Evaluation (eval)","basics","A repeatable test that measures how good a model or prompt is on sample inputs.","20 questions with ideal answers."],
+  ["Large Language Model (LLM)","llm","A neural network trained on huge amounts of text to predict the next token. It can write, summarise, translate and reason in text.","GPT, Claude, Gemini, Llama."],
+  ["Transformer","llm","The neural network design behind modern LLMs. Its attention mechanism lets every token look at the others.","The T in GPT."],
+  ["Token","llm","A chunk of text, often part of a word, that the model reads and writes. Pricing and limits use tokens.","'Kolkata' may be 2 or 3 tokens."],
+  ["Context window","llm","The maximum number of tokens a model can consider at once, covering your prompt, history and its reply.","128,000 tokens."],
+  ["Prompt","llm","The input text you give a model. It includes instructions, context and the question.","'Summarise this in 3 bullets.'"],
+  ["System message","llm","A hidden instruction that sets the assistant's role and rules for the whole conversation.","'You are a patient tutor.'"],
+  ["Temperature","llm","A setting for randomness. Low gives focused repeatable answers. High gives varied creative answers.","0 for classification, 0.8 for stories."],
+  ["Embedding","llm","A list of numbers representing the meaning of text. Similar meanings have similar numbers.","text-embedding-3-small."],
+  ["Hallucination","llm","When a model states something false or invented with confidence.","A fake book citation."],
+  ["Fine-tuning","llm","Further training a model on your own examples to change its style or skill.","Teaching a model your company's tone."],
+  ["Few-shot prompting","llm","Putting a few worked examples in the prompt so the model copies the pattern.","Three labelled messages, then a new one."],
+  ["Multimodal","llm","A model that handles more than text, such as images, audio or video.","Describing a photo."],
+  ["API","build","A way for one program to ask another to do something over the internet, with a defined format.","client.chat.completions.create(...)"],
+  ["API key","build","A secret string that identifies and bills your account. Keep it out of code and git.","sk-... stored in .env"],
+  ["SDK","build","A software development kit: a library that makes an API easy to use in your language.","The openai Python package."],
+  ["JSON","build","A text format for structured data using keys and values. Almost every API speaks it.","{\"name\": \"Riya\", \"age\": 21}"],
+  ["Environment variable","build","A named value stored outside your code, used for secrets and settings.","OPENAI_API_KEY"],
+  ["Virtual environment","build","An isolated folder of Python packages for one project.","python -m venv .venv"],
+  ["Rate limit","build","A cap on how many requests or tokens you can use per minute.","RateLimitError means slow down."],
+  ["Streaming","build","Receiving a reply piece by piece as it is generated, instead of all at once.","The typing effect in chat apps."],
+  ["Structured output","build","Forcing a model to reply in a fixed shape such as JSON or a Pydantic class.","with_structured_output(StudyPlan)"],
+  ["Chunking","build","Splitting long documents into smaller pieces before embedding them.","300-word chunks with overlap."],
+  ["Vector database","build","A database built to store embeddings and quickly find the closest ones.","Chroma, FAISS, pgvector."],
+  ["Semantic search","build","Search by meaning rather than exact words, using embeddings.","'late fee' finds 'fine for overdue books'."],
+  ["RAG","build","Retrieval-Augmented Generation. Find relevant text first, then ask the model to answer using it.","Chat with your PDFs."],
+  ["Prompt injection","build","An attack where text the model reads contains hidden instructions that try to take control.","A web page saying 'ignore previous rules'."],
+  ["Pipeline","build","A series of automated steps where each output feeds the next.","Fetch, summarise, save, email."],
+  ["Webhook","build","A URL your app exposes so another service can notify it when an event happens.","A new ticket calls /classify."],
+  ["Cron","build","A scheduler on Linux and Mac that runs commands at set times.","0 8 * * * runs daily at 8."],
+  ["Agent","agents","An LLM in a loop that can use tools, read the results and decide the next step until a goal is done.","A research assistant that searches and writes."],
+  ["Tool / function calling","agents","A feature where the model asks your code to run a function and then uses the result.","Calling add(2, 3)."],
+  ["Agent loop","agents","The repeated cycle of think, act, observe that an agent runs until it can answer.","for step in range(5)"],
+  ["ReAct","agents","A pattern that mixes reasoning and acting: reason about what to do, use a tool, observe, repeat.","Most simple agents."],
+  ["Agent memory","agents","Information kept between steps or sessions. Short-term is the message history. Long-term is stored in a database.","Remembering a user's goals."],
+  ["Orchestration","agents","Controlling the order and flow of several model calls, tools or agents.","Router then specialist agent."],
+  ["Multi-agent system","agents","Several agents with different roles that pass work to each other.","Researcher, writer, reviewer."],
+  ["Guardrails","agents","Rules and checks that limit what an AI can say or do.","Step caps, approval before sending."],
+  ["Human in the loop","agents","A design where a person approves important actions before they happen.","Review a drafted email first."],
+  ["LangChain","agents","A Python framework of building blocks for LLM apps: prompts, models, parsers, tools and agents.","prompt | llm | parser"],
+  ["LCEL","agents","LangChain Expression Language. The pipe style used to connect steps into a chain.","chain = prompt | llm"],
+  ["LangGraph","agents","A library from the LangChain team for building stateful agents as graphs of steps.","Branching, looping workflows."],
+  ["MCP","agents","Model Context Protocol. An open standard for connecting AI apps to tools and data sources.","One tool server, many assistants."],
+  ["Gradient descent","basics","The optimisation method behind training: repeatedly nudge each parameter a small step in the direction that lowers the loss.","w -= lr * grad_w"],
+  ["Backpropagation","basics","The algorithm that computes the gradient for every layer of a network by applying the chain rule from the output backwards.","How deep networks learn."],
+  ["Learning rate","basics","The step size of gradient descent. Too high diverges, too low is slow.","0.01"],
+  ["Data leakage","basics","When information from the test data influences training, making scores look better than reality.","Fitting a scaler on all data before splitting."],
+  ["Precision and recall","basics","Precision is the share of positive predictions that were right. Recall is the share of real positives that were found.","Fraud detection."],
+  ["Cross-validation","basics","Evaluating a model on several different train and test splits to measure its variance.","cross_val_score(model, X, y, cv=5)"],
+  ["Attention","llm","The mechanism that lets each token weigh every other token when building its representation.","softmax(Q K^T / sqrt(d)) V"],
+  ["KV cache","llm","Stored keys and values of earlier tokens so generation does not recompute them for every new token.","Why long chats use more GPU memory."],
+  ["Top-p (nucleus) sampling","llm","Sampling only from the smallest set of likely tokens whose probabilities add up to p.","top_p = 0.9"],
+  ["RLHF / DPO","llm","Methods that tune a model toward answers that humans or reward models prefer.","Turning a base model into an assistant."],
+  ["Quantization","llm","Storing model weights with fewer bits to cut memory and cost with little quality loss.","4-bit and 8-bit models."],
+  ["LoRA","llm","Low-rank adaptation: fine-tuning by training small added matrices while the original weights stay frozen.","QLoRA fine-tunes on one GPU."],
+  ["Reranker","build","A model that reads a question and a candidate passage together to reorder search results more accurately.","Rerank the top 20, keep 5."],
+  ["Hybrid search","build","Combining semantic vector search with keyword search such as BM25 and merging the results.","Reciprocal rank fusion."],
+  ["BM25","build","A classic keyword ranking function that scores documents by term frequency and rarity.","Finds exact error codes."],
+  ["LLM-as-judge","build","Using a model to score another model's output against a rubric.","Scoring answers from 1 to 5."],
+  ["Observability","build","Logging and tracing enough detail to reconstruct what a system did and why.","Prompt version, latency, tokens."],
+  ["Idempotent","build","An operation that gives the same result if run once or many times, which makes retries safe.","Writing today's digest file."],
+  ["Exponential backoff","build","Retrying with waits that double after each failure, usually with random jitter.","1s, 2s, 4s, 8s."],
+  ["Semantic cache","build","A cache that matches new requests to earlier ones by meaning, using embeddings.","Reusing an answer to a paraphrased FAQ."]
+  ];
+  var list=document.getElementById("gl"),count=document.getElementById("gcount"),search=document.getElementById("gsearch"),fbox=document.getElementById("gfilters");
+  var active="all";
+  var defs=[["all","All"]].concat(Object.keys(CATS).map(function(k){return [k,CATS[k][0]]}));
+  defs.forEach(function(d){
+    var b=document.createElement("button");b.type="button";b.textContent=d[1];b.dataset.k=d[0];b.setAttribute("aria-pressed",d[0]==="all"?"true":"false");
+    b.className="c-red";
+    b.addEventListener("click",function(){active=d[0];[].forEach.call(fbox.children,function(x){x.setAttribute("aria-pressed",x===b?"true":"false")});render()});
+    fbox.appendChild(b);
+  });
+  function esc(s){return s.replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+  function render(){
+    var q=search.value.trim().toLowerCase();
+    var out=G.filter(function(g){
+      return (active==="all"||g[1]===active)&&(!q||(g[0]+" "+g[2]+" "+g[3]).toLowerCase().indexOf(q)>-1);
+    });
+    count.textContent=out.length+" of "+G.length+" terms";
+    list.innerHTML=out.length?out.map(function(g){
+      var c=CATS[g[1]];
+      return '<article class="'+c[1]+'"><h4>'+esc(g[0])+' <span class="cat">'+c[0]+'</span></h4><p>'+esc(g[2])+'</p><div class="eg"><b>Example:</b> '+esc(g[3])+'</div></article>';
+    }).join(""):'<div class="empty">No term matches that search. Try a shorter word.</div>';
+  }
+  search.addEventListener("input",render);render();
+
+  /* ---------- syntax colouring ---------- */
+  var KW=new Set("import from as def return if elif else for while in not and or is None True False class with try except finally raise break continue lambda pass yield async await global".split(" "));
+  var BI=new Set("print len range str int float list dict set input open sum zip enumerate isinstance super".split(" "));
+  function esc2(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+  function colour(src,py){
+    var re=/(#[^\n]*)|("""[\s\S]*?"""|'''[\s\S]*?'''|f?"(?:\\.|[^"\\\n])*"|f?'(?:\\.|[^'\\\n])*')|(\b\d+(?:\.\d+)?\b)|(@\w+)|([A-Za-z_]\w*)/g;
+    var out="",last=0,m;
+    while((m=re.exec(src))){
+      out+=esc2(src.slice(last,m.index));
+      var t=m[0];
+      if(m[1])out+='<span class="cm">'+esc2(t)+'</span>';
+      else if(m[2])out+='<span class="s">'+esc2(t)+'</span>';
+      else if(!py)out+=esc2(t);
+      else if(m[3])out+='<span class="n">'+esc2(t)+'</span>';
+      else if(m[4])out+='<span class="d">'+esc2(t)+'</span>';
+      else if(KW.has(t))out+='<span class="k">'+t+'</span>';
+      else if(BI.has(t))out+='<span class="b">'+t+'</span>';
+      else out+=esc2(t);
+      last=m.index+t.length;
+    }
+    return out+esc2(src.slice(last));
+  }
+  document.querySelectorAll("pre code").forEach(function(c){
+    var src=c.textContent;c.dataset.raw=src;
+    c.innerHTML=colour(src,c.dataset.lang==="python");
+  });
+
+  /* ---------- copy buttons ---------- */
+  document.querySelectorAll("figure.code .copy").forEach(function(btn){
+    btn.addEventListener("click",function(){
+      var code=btn.closest("figure").querySelector("code");
+      var raw=code.dataset.raw||code.textContent;
+      function done(ok){btn.textContent=ok?"Copied":"Select and copy";setTimeout(function(){btn.textContent="Copy"},1600)}
+      function fallback(){
+        try{var r=document.createRange();r.selectNodeContents(code);var s=getSelection();s.removeAllRanges();s.addRange(r);done(false)}catch(e){done(false)}
+      }
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(raw).then(function(){done(true)},fallback);
+      }else fallback();
+    });
+  });
+
+  /* ---------- active chapter in the rail ---------- */
+  var links=[].slice.call(document.querySelectorAll("#toc a"));
+  var map={};links.forEach(function(a){map[a.getAttribute("href").slice(1)]=a});
+  if("IntersectionObserver" in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){
+          links.forEach(function(a){a.classList.remove("on")});
+          var a=map[e.target.id];
+          if(a){a.classList.add("on");
+            try{if(getComputedStyle(document.getElementById("toc")).flexDirection==="row"){a.scrollIntoView({inline:"center",block:"nearest"})}}catch(x){}}
+        }
+      });
+    },{rootMargin:"-20% 0px -70% 0px"});
+    document.querySelectorAll("section.chapter").forEach(function(s){io.observe(s)});
+  }
+
+  /* ---------- roadmap checklist ---------- */
+  var PKEY="handbook-progress",saved={};
+  try{saved=JSON.parse(localStorage.getItem(PKEY)||"{}")}catch(err){saved={}}
+  var boxes=[].slice.call(document.querySelectorAll(".chk input"));
+  function tally(){
+    document.querySelectorAll(".phase").forEach(function(ph){
+      var all=ph.querySelectorAll(".chk input").length,done=ph.querySelectorAll(".chk input:checked").length;
+      var el=ph.querySelector(".prog");if(el)el.textContent=done+" of "+all+" done";
+    });
+    var t=document.getElementById("gtotal");
+    if(t){var d=boxes.filter(function(b){return b.checked}).length;t.textContent="Your progress: "+d+" of "+boxes.length+" steps done"}
+  }
+  boxes.forEach(function(b){
+    b.checked=!!saved[b.dataset.k];
+    b.addEventListener("change",function(){saved[b.dataset.k]=b.checked;try{localStorage.setItem(PKEY,JSON.stringify(saved))}catch(err){}tally()});
+  });
+  tally();
+})();
+</script>
+
+</body></html>
